@@ -1,0 +1,25 @@
+services:
+  api:
+    build: .
+    ports:
+      - 8080:80
+    volumes:
+      - .:/go/src/youtube-channel-manager-api
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: "postgres:14.4-alpine"
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: ${DB_TIMEZONE}
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+
+volumes:
+  db-data:
