@@ -1,0 +1,489 @@
+openapi: 3.0.3
+
+info:
+  title: YouTube Channel Manager
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: user
+    description: チャンネルリストを管理するユーザー
+  - name: channelList
+    description: ユーザーが分別したチャンネルを保存するリスト
+  - name: channel
+    description: YouTube に登録されているチャンネル情報
+  - name: video
+    description: YouTube にアップロードされている動画情報
+
+paths:
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: |
+        OAuth2 から渡された承認コードを元に
+        アクセストークンと更新トークンを取得する
+      description: |
+        ユーザーが自身の YouTube のリソースの閲覧をアプリに認可した際に、
+        このエンドポイントにリダイレクトされる。  
+        クエリストリングの `code` から渡される承認コードを
+        サーバーサイドでアクセストークンと更新トークンに引き換え、
+        DB に保存、Cookie を発行する。
+      parameters:
+        - name: code
+          in: query
+          description: OAuth2 から渡された承認コード
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: 認可成功
+          headers:
+            Set-Cookie:
+              description: ユーザーを判別するための Cookie
+              schema:
+                example: |
+                  SSID=foobarbaz123; Path=/; HttpOnly; Secure; SameSite=Lax
+                type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: サービスからログアウトする
+      description: |
+        cookie を空にセット。
+      security:
+        - cookieAuth: []
+      responses:
+        "204":
+          description: ログアウト成功
+          headers:
+            Set-Cookie:
+              description: ユーザーを判別するための Cookie
+              schema:
+                example: SSID=; Path=/; HttpOnly; Secure; SameSite=Lax
+                type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /users/me:
+    get:
+      tags:
+        - user
+      summary: ログインしているユーザーの情報を取得する
+      description: ログインしているユーザーの情報を取得する
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /users/me/subscriptions:
+    get:
+      tags:
+        - user
+        - channel
+      summary: |
+        ログインしているユーザーが YouTube で購読しているチャンネルを取得する
+      description: |
+        ログインしているユーザーが YouTube で購読しているチャンネルを取得する
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ユーザーが YouTube で購読しているチャンネル
+                items:
+                  $ref: "#/components/schemas/Channel"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /channelLists:
+    post:
+      tags:
+        - channelList
+      summary: チャンネルリストを新規作成する
+      description: ログインしているユーザーでチャンネルリストを新規作成する。
+      security:
+        - cookieAuth: []
+      requestBody:
+        description: チャンネルリストのタイトル
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelList"
+      responses:
+        "201":
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelList"
+    get:
+      tags:
+        - channelList
+      summary: ユーザーのチャンネルリストを取得する
+      description: |
+        ログインしているユーザーが登録しているチャンネルリストを全件取得する。
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ユーザーが登録したチャンネルリスト一覧
+                items:
+                  $ref: "#/components/schemas/ChannelList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /channelLists/{id}:
+    parameters:
+      - $ref: "#/components/parameters/ChannelListId"
+    get:
+      tags:
+        - channelList
+      summary: ユーザーのチャンネルリストを1件取得する
+      description: |
+        ログインしているユーザーが登録している
+        チャンネルリストの ID を元に取得する。
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - channelList
+      summary: ユーザーのチャンネルリストを1件更新する
+      description: |
+        ログインしているユーザーが登録している
+        チャンネルリストの ID を元にタイトルを更新する。
+      security:
+        - cookieAuth: []
+      requestBody:
+        description: チャンネルリストのタイトル
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelList"
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - channelList
+      summary: ユーザーのチャンネルリストを1件削除する
+      description: |
+        ログインしているユーザーが登録している
+        チャンネルリストの ID を元に削除する。
+      security:
+        - cookieAuth: []
+      responses:
+        "204":
+          description: 削除成功
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /channelLists/{id}/channels:
+    parameters:
+      - $ref: "#/components/parameters/ChannelListId"
+    get:
+      tags:
+        - channelList
+        - channel
+      summary: チャンネルリストに属するチャンネルを取得する
+      description: |
+        ログインしているユーザーが
+        チャンネルリストに登録したチャンネルを取得する。
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Channel"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags:
+        - channelList
+        - channel
+      summary: チャンネルリストへチャンネルを登録する
+      description: |
+        ログインしているユーザーが YouTube で購読しているチャンネルの中から
+        チャンネルリストに追加する。
+      security:
+        - cookieAuth: []
+      requestBody:
+        description: チャンネル IDの配列
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Channel"
+      responses:
+        "200":
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Channel"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /channelLists/{id}/feed:
+    parameters:
+      - $ref: "#/components/parameters/ChannelListId"
+    get:
+      tags:
+        - channelList
+        - video
+      summary: |
+        チャンネルリストに登録されているチャンネルのアップロード動画を取得する
+      description: |
+        ログインしているユーザーの登録しているチャンネルリストに含まれる
+        チャンネルの最新のアップロード動画を取得する。
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                description: 登録したチャンネルがアップロードした動画一覧
+                items:
+                  $ref: "#/components/schemas/Video"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /channels/{id}/feed:
+    parameters:
+      - $ref: "#/components/parameters/ChannelId"
+    get:
+      tags:
+        - channel
+        - video
+      summary: |
+        チャンネルのアップロード動画を取得する
+      description: |
+        ログインしているユーザーの登録チャンネルの最新アップロード動画を取得する。
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                description: 登録したチャンネルがアップロードした動画一覧
+                items:
+                  $ref: "#/components/schemas/Video"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: YouTube によって割り振られるチャンネル ID
+          example: UCifLi0ciyoSDVZ5oDhJUDng
+        name:
+          type: string
+          description: YouTube で設定されているチャンネルの名前
+          example: たぼすけ
+        thumbnail:
+          type: string
+          description: YouTube で設定されているチャンネルのサムネイルの URL
+        # subscriptions:
+        #   type: array
+        #   description: ユーザーが購読しているチャンネルの一覧
+        #   items:
+        #     $ref: "#/components/schemas/Channel"
+        # channelList:
+        #   type: array
+        #   description: ユーザーがこのサービスで作成したチャンネルリストの一覧
+        #   items:
+        #     $ref: "#/components/schemas/ChannelList"
+      required:
+        - id
+        - name
+        - thumbnail
+    ChannelList:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: string
+          format: uuid
+        title:
+          type: string
+          description: ユーザーによって命名されたチャンネルリストの名前
+          example: 歌ってみた投稿チャンネル
+        # channels:
+        #   readOnly: true
+        #   type: array
+        #   description: ユーザーがチャンネルリストへ登録したチャンネルの配列
+        #   items:
+        #     $ref: "#/components/schemas/Channel"
+      required:
+        - id
+        - title
+    Channel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: YouTube によって割り振られる ID
+          example: UCah4_WVjmr8XA7i5aigwV-Q
+        name:
+          readOnly: true
+          type: string
+          description: YouTube で設定されているチャンネル名
+          example: ヰ世界情緒 -Isekaijoucho-
+        thumbnail:
+          readOnly: true
+          type: string
+          description: YouTube で設定されているチャンネルのサムネイルの URL
+        url:
+          readOnly: true
+          type: string
+          description: チャンネルのURL
+          example: https://www.youtube.com/channel/UCah4_WVjmr8XA7i5aigwV-Q
+        # videos:
+        #   readOnly: true
+        #   type: array
+        #   description: このチャンネルが YouTube に投稿した動画の一覧
+        #   items:
+        #     $ref: "#/components/schemas/Video"
+      required:
+        - id
+        - name
+        - thumbnail
+        - url
+    Video:
+      type: object
+      properties:
+        id:
+          type: string
+          description: YouTube によって割り振られる ID
+          example: nSHH49_7bTw
+        title:
+          type: string
+          description: YouTube で設定されている動画のタイトル
+          example: 【歌ってみた】撫でんな / covered by ヰ世界情緒
+        thumbnail:
+          type: string
+          description: YouTube で設定されている動画のサムネイルの URL
+        url:
+          type: string
+          description: 動画の URL
+          example: https://www.youtube.com/watch?v=nSHH49_7bTw
+        publishedAt:
+          type: string
+          format: date-time
+          description: 動画の公開日
+      required:
+        - id
+        - title
+        - thumbnail
+        - url
+        - publishedAt
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: SSID
+  parameters:
+    ChannelListId:
+      name: id
+      description: チャンネルリスト ID(UUID)
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ChannelId:
+      name: id
+      description: チャンネル ID
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: 未認証によりアクセスできない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: リソースが見つからない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
