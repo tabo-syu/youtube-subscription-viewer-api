@@ -28,17 +28,17 @@ type Channel struct {
 	Url *string `json:"url,omitempty"`
 }
 
-// ChannelList defines model for ChannelList.
-type ChannelList struct {
+// Error defines model for Error.
+type Error struct {
+	Message string `json:"message"`
+}
+
+// List defines model for List.
+type List struct {
 	Id *openapi_types.UUID `json:"id,omitempty"`
 
 	// ユーザーによって命名されたチャンネルリストの名前
 	Title string `json:"title"`
-}
-
-// Error defines model for Error.
-type Error struct {
-	Message string `json:"message"`
 }
 
 // User defines model for User.
@@ -74,8 +74,8 @@ type Video struct {
 // ChannelId defines model for ChannelId.
 type ChannelId = string
 
-// ChannelListId defines model for ChannelListId.
-type ChannelListId = openapi_types.UUID
+// ListId defines model for ListId.
+type ListId = openapi_types.UUID
 
 // NotFound defines model for NotFound.
 type NotFound = Error
@@ -83,26 +83,26 @@ type NotFound = Error
 // Unauthorized defines model for Unauthorized.
 type Unauthorized = Error
 
-// PostChannelListsJSONBody defines parameters for PostChannelLists.
-type PostChannelListsJSONBody = ChannelList
+// PostListsJSONBody defines parameters for PostLists.
+type PostListsJSONBody = List
 
-// PatchChannelListsIdJSONBody defines parameters for PatchChannelListsId.
-type PatchChannelListsIdJSONBody = ChannelList
+// PatchListsIdJSONBody defines parameters for PatchListsId.
+type PatchListsIdJSONBody = List
 
-// PostChannelListsIdChannelsJSONBody defines parameters for PostChannelListsIdChannels.
-type PostChannelListsIdChannelsJSONBody = []Channel
+// PostListsIdChannelsJSONBody defines parameters for PostListsIdChannels.
+type PostListsIdChannelsJSONBody = []Channel
 
-// GetUserLoginParams defines parameters for GetUserLogin.
-type GetUserLoginParams struct {
+// GetUsersLoginParams defines parameters for GetUsersLogin.
+type GetUsersLoginParams struct {
 	// OAuth2 から渡された承認コード
 	Code string `form:"code" json:"code"`
 }
 
-// PostChannelListsJSONRequestBody defines body for PostChannelLists for application/json ContentType.
-type PostChannelListsJSONRequestBody = PostChannelListsJSONBody
+// PostListsJSONRequestBody defines body for PostLists for application/json ContentType.
+type PostListsJSONRequestBody = PostListsJSONBody
 
-// PatchChannelListsIdJSONRequestBody defines body for PatchChannelListsId for application/json ContentType.
-type PatchChannelListsIdJSONRequestBody = PatchChannelListsIdJSONBody
+// PatchListsIdJSONRequestBody defines body for PatchListsId for application/json ContentType.
+type PatchListsIdJSONRequestBody = PatchListsIdJSONBody
 
-// PostChannelListsIdChannelsJSONRequestBody defines body for PostChannelListsIdChannels for application/json ContentType.
-type PostChannelListsIdChannelsJSONRequestBody = PostChannelListsIdChannelsJSONBody
+// PostListsIdChannelsJSONRequestBody defines body for PostListsIdChannels for application/json ContentType.
+type PostListsIdChannelsJSONRequestBody = PostListsIdChannelsJSONBody
