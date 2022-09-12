@@ -10,7 +10,7 @@ servers:
 tags:
   - name: user
     description: チャンネルリストを管理するユーザー
-  - name: channelList
+  - name: list
     description: ユーザーが分別したチャンネルを保存するリスト
   - name: channel
     description: YouTube に登録されているチャンネル情報
@@ -18,7 +18,7 @@ tags:
     description: YouTube にアップロードされている動画情報
 
 paths:
-  /user/login:
+  /users/login:
     get:
       tags:
         - user
@@ -51,7 +51,7 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
 
-  /user/logout:
+  /users/logout:
     get:
       tags:
         - user
@@ -114,10 +114,10 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
 
-  /channelLists:
+  /lists:
     post:
       tags:
-        - channelList
+        - list
       summary: チャンネルリストを新規作成する
       description: ログインしているユーザーでチャンネルリストを新規作成する。
       security:
@@ -128,17 +128,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChannelList"
+              $ref: "#/components/schemas/List"
       responses:
         "201":
           description: 作成成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChannelList"
+                $ref: "#/components/schemas/List"
     get:
       tags:
-        - channelList
+        - list
       summary: ユーザーのチャンネルリストを取得する
       description: |
         ログインしているユーザーが登録しているチャンネルリストを全件取得する。
@@ -153,16 +153,16 @@ paths:
                 type: array
                 description: ユーザーが登録したチャンネルリスト一覧
                 items:
-                  $ref: "#/components/schemas/ChannelList"
+                  $ref: "#/components/schemas/List"
         "401":
           $ref: "#/components/responses/Unauthorized"
 
-  /channelLists/{id}:
+  /lists/{id}:
     parameters:
-      - $ref: "#/components/parameters/ChannelListId"
+      - $ref: "#/components/parameters/ListId"
     get:
       tags:
-        - channelList
+        - list
       summary: ユーザーのチャンネルリストを1件取得する
       description: |
         ログインしているユーザーが登録している
@@ -175,14 +175,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChannelList"
+                $ref: "#/components/schemas/List"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
       tags:
-        - channelList
+        - list
       summary: ユーザーのチャンネルリストを1件更新する
       description: |
         ログインしているユーザーが登録している
@@ -195,21 +195,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChannelList"
+              $ref: "#/components/schemas/List"
       responses:
         "200":
           description: 取得成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChannelList"
+                $ref: "#/components/schemas/List"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
     delete:
       tags:
-        - channelList
+        - list
       summary: ユーザーのチャンネルリストを1件削除する
       description: |
         ログインしているユーザーが登録している
@@ -224,12 +224,12 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /channelLists/{id}/channels:
+  /lists/{id}/channels:
     parameters:
-      - $ref: "#/components/parameters/ChannelListId"
+      - $ref: "#/components/parameters/ListId"
     get:
       tags:
-        - channelList
+        - list
         - channel
       summary: チャンネルリストに属するチャンネルを取得する
       description: |
@@ -250,7 +250,7 @@ paths:
           $ref: "#/components/responses/Unauthorized"
     post:
       tags:
-        - channelList
+        - list
         - channel
       summary: チャンネルリストへチャンネルを登録する
       description: |
@@ -279,12 +279,12 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
 
-  /channelLists/{id}/feed:
+  /lists/{id}/feed:
     parameters:
-      - $ref: "#/components/parameters/ChannelListId"
+      - $ref: "#/components/parameters/ListId"
     get:
       tags:
-        - channelList
+        - list
         - video
       summary: |
         チャンネルリストに登録されているチャンネルのアップロード動画を取得する
@@ -357,16 +357,16 @@ components:
         #   description: ユーザーが購読しているチャンネルの一覧
         #   items:
         #     $ref: "#/components/schemas/Channel"
-        # channelList:
+        # list:
         #   type: array
         #   description: ユーザーがこのサービスで作成したチャンネルリストの一覧
         #   items:
-        #     $ref: "#/components/schemas/ChannelList"
+        #     $ref: "#/components/schemas/List"
       required:
         - id
         - name
         - thumbnail
-    ChannelList:
+    List:
       type: object
       properties:
         id:
@@ -459,7 +459,7 @@ components:
       in: cookie
       name: SSID
   parameters:
-    ChannelListId:
+    ListId:
       name: id
       description: チャンネルリスト ID(UUID)
       in: path
