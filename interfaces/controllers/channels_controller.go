@@ -14,7 +14,8 @@ func NewChannelsController(s SqlHandler, y YoutubeHandler) *ChannelsController {
 }
 
 func (c *ChannelsController) GetFeed() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
+
 		return nil
 	}
 }

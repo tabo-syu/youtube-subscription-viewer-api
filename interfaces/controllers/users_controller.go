@@ -12,25 +12,25 @@ func NewUsersController(s SqlHandler, y YoutubeHandler) *UsersController {
 }
 
 func (c *UsersController) Login() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *UsersController) Logout() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *UsersController) GetMyself() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *UsersController) GetMySubscriptions() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }

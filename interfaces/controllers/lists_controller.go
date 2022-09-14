@@ -12,49 +12,49 @@ func NewListsController(s SqlHandler, y YoutubeHandler) *ListsController {
 }
 
 func (c *ListsController) Create() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) GetAll() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) GetById() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) UpdateById() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) DeleteById() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) AddChannel() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) GetAllChannels() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) GetFeed() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(ctx echo.Context) error {
 		return nil
 	}
 }
