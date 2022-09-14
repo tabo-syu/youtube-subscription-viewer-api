@@ -1,6 +1,9 @@
 package ports
 
-import "github.com/tabo-syu/youtube-subscription-viewer-api/entities"
+import (
+	"github.com/labstack/echo/v4"
+	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
+)
 
 type UsersRepository interface {
 	RegisterUser(*entities.User) (*entities.User, error)
@@ -12,4 +15,7 @@ type UsersInputPort interface {
 	GetMyself()
 }
 
-type UsersOutputPort interface{}
+type UsersOutputPort interface {
+	OutputUsers(echo.Context, []*entities.User) error
+	OutputUser(echo.Context, *entities.User) error
+}
