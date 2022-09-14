@@ -12,7 +12,8 @@ type UsersRepository interface {
 }
 
 type UsersInputPort interface {
-	GetMyself()
+	GetMyself(echo.Context) error
+	GetMySubscriptions(echo.Context) error
 }
 
 type UsersOutputPort interface {

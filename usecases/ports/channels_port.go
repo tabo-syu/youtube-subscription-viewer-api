@@ -10,7 +10,7 @@ type ChannelsRepository interface {
 }
 
 type ChannelsInputPort interface {
-	GetFeed() error
+	GetFeed(echo.Context) error
 }
 
 type ChannelsOutputPort interface {

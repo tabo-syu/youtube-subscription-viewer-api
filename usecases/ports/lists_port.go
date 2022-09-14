@@ -17,11 +17,11 @@ type ListsRepository interface {
 }
 
 type ListsInputPort interface {
-	Create(*entities.List) error
-	GetAll() error
-	GetById(entities.ListId) error
-	UpdateById(*entities.List) error
-	DeleteById(entities.ListId) error
+	Create(echo.Context, *entities.List) error
+	GetAll(echo.Context) error
+	GetById(echo.Context, entities.ListId) error
+	Update(echo.Context, *entities.List) error
+	DeleteById(echo.Context, entities.ListId) error
 }
 
 type ListsOutputPort interface {
