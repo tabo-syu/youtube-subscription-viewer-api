@@ -1,3 +1,3 @@
-package controllers
+package interfaces
 
 type SqlHandler interface{}
