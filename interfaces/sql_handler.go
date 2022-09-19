@@ -1,3 +1,7 @@
 package interfaces
 
-type SqlHandler interface{}
+import "database/sql"
+
+type SqlHandler interface {
+	Exec(query string, args ...any) (sql.Result, error)
+}

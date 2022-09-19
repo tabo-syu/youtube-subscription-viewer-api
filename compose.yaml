@@ -2,7 +2,7 @@ services:
   api:
     build: .
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
       - .:/go/src/youtube-channel-manager-api
     env_file:

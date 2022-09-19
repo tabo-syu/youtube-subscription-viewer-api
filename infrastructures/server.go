@@ -2,6 +2,7 @@ package infrastructures
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -9,13 +10,15 @@ import (
 )
 
 type Server struct {
-	Users    *controllers.UsersController
-	Lists    *controllers.ListsController
-	Channels *controllers.ChannelsController
+	Authorizations *controllers.YoutubeAuthsController
+	Users          *controllers.UsersController
+	Lists          *controllers.ListsController
+	Channels       *controllers.ChannelsController
 }
 
-func NewServer(db *SqlHandler, youtube *YoutubeHandler) (*Server, error) {
+func NewServer(db *SqlHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHandler) (*Server, error) {
 	return &Server{
+		controllers.NewYoutubeAuthsController(oauth2),
 		controllers.NewUsersController(db, youtube),
 		controllers.NewListsController(db, youtube),
 		controllers.NewChannelsController(db, youtube),
@@ -28,7 +31,17 @@ func (s *Server) Start(port string) {
 
 	users := e.Group("/users")
 	{
-		users.GET("/login", s.Users.Login())
+		authCSRF := middleware.CSRFWithConfig(
+			middleware.CSRFConfig{
+				TokenLookup:    "query:state",
+				CookieHTTPOnly: true,
+				CookieSameSite: http.SameSiteLaxMode,
+			},
+		)
+
+		users.GET("/auth", s.Authorizations.Authorize(middleware.DefaultCSRFConfig.ContextKey), authCSRF)
+		users.GET("/login", s.Users.Login(), authCSRF)
+
 		users.GET("/logout", s.Users.Logout())
 
 		users.GET("/me", s.Users.GetMyself())

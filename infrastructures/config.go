@@ -1,6 +1,8 @@
 package infrastructures
 
-import "os"
+import (
+	"os"
+)
 
 type DB struct {
 	Host     string
@@ -11,23 +13,30 @@ type DB struct {
 	TimeZone string
 }
 
-type Youtube struct{}
+type Youtube struct {
+	ClientSecret []byte
+}
 
 type Config struct {
 	DB      DB
 	Youtube Youtube
 }
 
-func NewConfig() *Config {
+func NewConfig() (*Config, error) {
+	secret, err := os.ReadFile("client_secret.json")
+	if err != nil {
+		return nil, err
+	}
+
 	return &Config{
 		DB: DB{
-			Host:     os.Getenv("DB_HOST"),
-			Port:     os.Getenv("DB_PORT"),
-			Name:     os.Getenv("DB_NAME"),
-			User:     os.Getenv("DB_USER"),
-			Password: os.Getenv("DB_PASSWORD"),
-			TimeZone: os.Getenv("DB_TIMEZONE"),
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_NAME"),
+			os.Getenv("DB_USER"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_TIMEZONE"),
 		},
-		Youtube: Youtube{},
-	}
+		Youtube: Youtube{secret},
+	}, nil
 }
