@@ -18,6 +18,27 @@ tags:
     description: YouTube にアップロードされている動画情報
 
 paths:
+  /users/auth:
+    get:
+      tags:
+        - user
+      summary: |
+        アクセスしたユーザーを YouTube の認可サーバーへリダイレクトさせる
+      description: |
+        このエンドポイントにアクセスしたユーザーはサーバーで発行した
+        リダイレクト URL へリダイレクトさせる。
+        リダイレクト後、認可が承認されれば、`users/login` エンドポイントへ
+        さらにリダイレクトされる。
+      responses:
+        "302":
+          description: Google の認可ページへリダイレクト
+          headers:
+            Set-Cookie:
+              description: CSRF 対策のクッキー
+              schema:
+                example: |
+                  _csrf=foobarbaz123; Path=/users; HttpOnly; Secure; SameSite=Lax
+                type: string
   /users/login:
     get:
       tags:
