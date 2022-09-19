@@ -36,3 +36,7 @@ func NewSqlHandler(config *DB) (*SqlHandler, error) {
 func (s *SqlHandler) Close() error {
 	return s.db.Close()
 }
+
+func (s *SqlHandler) Exec(query string, args ...any) (sql.Result, error) {
+	return s.db.Exec(query, args...)
+}
