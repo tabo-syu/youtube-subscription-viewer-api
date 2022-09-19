@@ -1,4 +1,4 @@
-package: entity
+package: entities
 generate:
   models: true
 output: entities/entities.gen.go

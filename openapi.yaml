@@ -373,6 +373,8 @@ components:
           readOnly: true
           type: string
           format: uuid
+          x-oapi-codegen-extra-tags:
+            param: id
         title:
           type: string
           description: ユーザーによって命名されたチャンネルリストの名前
@@ -393,6 +395,8 @@ components:
           type: string
           description: YouTube によって割り振られる ID
           example: UCah4_WVjmr8XA7i5aigwV-Q
+          x-oapi-codegen-extra-tags:
+            param: id
         name:
           readOnly: true
           type: string
@@ -425,6 +429,8 @@ components:
           type: string
           description: YouTube によって割り振られる ID
           example: nSHH49_7bTw
+          x-oapi-codegen-extra-tags:
+            param: id
         title:
           type: string
           description: YouTube で設定されている動画のタイトル

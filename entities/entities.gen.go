@@ -16,7 +16,7 @@ const (
 // Channel defines model for Channel.
 type Channel struct {
 	// YouTube によって割り振られる ID
-	Id string `json:"id"`
+	Id string `json:"id" param:"id"`
 
 	// YouTube で設定されているチャンネル名
 	Name *string `json:"name,omitempty"`
@@ -35,7 +35,7 @@ type Error struct {
 
 // List defines model for List.
 type List struct {
-	Id *openapi_types.UUID `json:"id,omitempty"`
+	Id *openapi_types.UUID `json:"id,omitempty" param:"id"`
 
 	// ユーザーによって命名されたチャンネルリストの名前
 	Title string `json:"title"`
@@ -56,7 +56,7 @@ type User struct {
 // Video defines model for Video.
 type Video struct {
 	// YouTube によって割り振られる ID
-	Id string `json:"id"`
+	Id string `json:"id" param:"id"`
 
 	// 動画の公開日
 	PublishedAt time.Time `json:"publishedAt"`
