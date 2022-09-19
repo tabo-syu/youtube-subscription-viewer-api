@@ -6,18 +6,20 @@ import (
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
 
-type ChannelsPresenter struct{}
+type ChannelsPresenter struct {
+	ctx echo.Context
+}
 
 var _ ports.ChannelsOutputPort = (*ChannelsPresenter)(nil)
 
-func NewChannelsPresenter() *ChannelsPresenter {
-	return &ChannelsPresenter{}
+func NewChannelsPresenter(ctx echo.Context) *ChannelsPresenter {
+	return &ChannelsPresenter{ctx}
 }
 
-func (p *ChannelsPresenter) OutputChannels(ctx echo.Context, channels []*entities.Channel) error {
+func (p *ChannelsPresenter) OutputChannels(channels []*entities.Channel) error {
 	return nil
 }
 
-func (p *ChannelsPresenter) OutputChannel(ctx echo.Context, channel *entities.Channel) error {
+func (p *ChannelsPresenter) OutputChannel(channel *entities.Channel) error {
 	return nil
 }

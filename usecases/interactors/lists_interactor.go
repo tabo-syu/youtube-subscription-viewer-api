@@ -1,7 +1,6 @@
 package interactors
 
 import (
-	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
@@ -26,74 +25,74 @@ func NewListsInteractor(
 	return &ListsInteractor{lo, co, vo, eo, lr}
 }
 
-func (i *ListsInteractor) Create(ctx echo.Context, list *entities.List) error {
+func (i *ListsInteractor) Create(list *entities.List) error {
 	list, err := i.listsRepository.Create(list)
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.listsOutput.OutputList(ctx, list)
+	return i.listsOutput.OutputList(list)
 }
 
-func (i *ListsInteractor) GetAll(ctx echo.Context) error {
+func (i *ListsInteractor) GetAll() error {
 	lists, err := i.listsRepository.GetAll()
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.listsOutput.OutputLists(ctx, lists)
+	return i.listsOutput.OutputLists(lists)
 }
 
-func (i *ListsInteractor) GetById(ctx echo.Context, id entities.ListId) error {
+func (i *ListsInteractor) GetById(id entities.ListId) error {
 	list, err := i.listsRepository.GetById(id)
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.listsOutput.OutputList(ctx, list)
+	return i.listsOutput.OutputList(list)
 }
 
-func (i *ListsInteractor) Update(ctx echo.Context, list *entities.List) error {
+func (i *ListsInteractor) Update(list *entities.List) error {
 	list, err := i.listsRepository.Update(list)
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.listsOutput.OutputList(ctx, list)
+	return i.listsOutput.OutputList(list)
 }
 
-func (i *ListsInteractor) DeleteById(ctx echo.Context, id entities.ListId) error {
+func (i *ListsInteractor) DeleteById(id entities.ListId) error {
 	err := i.listsRepository.DeleteById(id)
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.listsOutput.OutputList(ctx, &entities.List{})
+	return i.listsOutput.OutputList(&entities.List{})
 }
 
-func (i *ListsInteractor) AddChannel(ctx echo.Context) error {
+func (i *ListsInteractor) AddChannel() error {
 	channel, err := i.listsRepository.AddChannel(&entities.Channel{})
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.channelsOutput.OutputChannel(ctx, channel)
+	return i.channelsOutput.OutputChannel(channel)
 }
 
-func (i *ListsInteractor) GetAllChannels(ctx echo.Context) error {
+func (i *ListsInteractor) GetAllChannels() error {
 	channels, err := i.listsRepository.GetAllChannels()
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.channelsOutput.OutputChannels(ctx, channels)
+	return i.channelsOutput.OutputChannels(channels)
 }
 
-func (i *ListsInteractor) GetFeed(ctx echo.Context) error {
+func (i *ListsInteractor) GetFeed() error {
 	videos, err := i.listsRepository.GetFeed()
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.videosOutput.OutputVideos(ctx, videos)
+	return i.videosOutput.OutputVideos(videos)
 }

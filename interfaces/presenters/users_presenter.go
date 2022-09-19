@@ -6,18 +6,20 @@ import (
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
 
-type UsersPresenter struct{}
+type UsersPresenter struct {
+	ctx echo.Context
+}
 
 var _ ports.UsersOutputPort = (*UsersPresenter)(nil)
 
-func NewUsersPresenter() *UsersPresenter {
-	return &UsersPresenter{}
+func NewUsersPresenter(ctx echo.Context) *UsersPresenter {
+	return &UsersPresenter{ctx}
 }
 
-func (p *UsersPresenter) OutputUsers(ctx echo.Context, users []*entities.User) error {
+func (p *UsersPresenter) OutputUsers(users []*entities.User) error {
 	return nil
 }
 
-func (p *UsersPresenter) OutputUser(ctx echo.Context, user *entities.User) error {
+func (p *UsersPresenter) OutputUser(user *entities.User) error {
 	return nil
 }

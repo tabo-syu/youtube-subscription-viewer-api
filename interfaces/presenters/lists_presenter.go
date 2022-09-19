@@ -6,18 +6,20 @@ import (
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
 
-type ListsPresenter struct{}
+type ListsPresenter struct {
+	ctx echo.Context
+}
 
 var _ ports.ListsOutputPort = (*ListsPresenter)(nil)
 
-func NewListsPresenter() *ListsPresenter {
-	return &ListsPresenter{}
+func NewListsPresenter(ctx echo.Context) *ListsPresenter {
+	return &ListsPresenter{ctx}
 }
 
-func (p *ListsPresenter) OutputLists(ctx echo.Context, lists []*entities.List) error {
+func (p *ListsPresenter) OutputLists(lists []*entities.List) error {
 	return nil
 }
 
-func (p *ListsPresenter) OutputList(ctx echo.Context, list *entities.List) error {
+func (p *ListsPresenter) OutputList(list *entities.List) error {
 	return nil
 }

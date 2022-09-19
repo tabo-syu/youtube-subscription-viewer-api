@@ -1,7 +1,6 @@
 package interactors
 
 import (
-	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
 
@@ -23,20 +22,20 @@ func NewUsersInteractor(
 	return &UsersInteractor{uo, vo, eo, ur}
 }
 
-func (i *UsersInteractor) GetMyself(ctx echo.Context) error {
+func (i *UsersInteractor) GetMyself() error {
 	me, err := i.usersRepository.GetMyself()
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.usersOutput.OutputUser(ctx, me)
+	return i.usersOutput.OutputUser(me)
 }
 
-func (i *UsersInteractor) GetMySubscriptions(ctx echo.Context) error {
+func (i *UsersInteractor) GetMySubscriptions() error {
 	videos, err := i.usersRepository.GetMySubscriptions()
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.videosOutput.OutputVideos(ctx, videos)
+	return i.videosOutput.OutputVideos(videos)
 }

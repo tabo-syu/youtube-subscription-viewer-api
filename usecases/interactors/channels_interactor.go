@@ -1,7 +1,6 @@
 package interactors
 
 import (
-	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
 
@@ -25,11 +24,11 @@ func NewChannelsInteractor(
 	return &ChannelsInteractor{lo, co, vo, eo, cr}
 }
 
-func (i *ChannelsInteractor) GetFeed(ctx echo.Context) error {
+func (i *ChannelsInteractor) GetFeed() error {
 	videos, err := i.channelsRepository.GetFeed()
 	if err != nil {
-		return i.errorsOutput.OutputError(ctx)
+		return i.errorsOutput.OutputError()
 	}
 
-	return i.videosOutput.OutputVideos(ctx, videos)
+	return i.videosOutput.OutputVideos(videos)
 }

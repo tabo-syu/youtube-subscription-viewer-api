@@ -2,6 +2,6 @@ package infrastructures
 
 type YoutubeHandler struct{}
 
-func NewYoutubeHandler(config *Config) *YoutubeHandler {
+func NewYoutubeHandler(config *Youtube) *YoutubeHandler {
 	return &YoutubeHandler{}
 }

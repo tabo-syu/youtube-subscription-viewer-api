@@ -14,15 +14,12 @@ type Server struct {
 	Channels *controllers.ChannelsController
 }
 
-func NewServer(config *Config) *Server {
-	s := NewSqlHandler(config)
-	y := NewYoutubeHandler(config)
-
+func NewServer(db *SqlHandler, youtube *YoutubeHandler) (*Server, error) {
 	return &Server{
-		controllers.NewUsersController(s, y),
-		controllers.NewListsController(s, y),
-		controllers.NewChannelsController(s, y),
-	}
+		controllers.NewUsersController(db, youtube),
+		controllers.NewListsController(db, youtube),
+		controllers.NewChannelsController(db, youtube),
+	}, nil
 }
 
 func (s *Server) Start(port string) {
@@ -44,7 +41,7 @@ func (s *Server) Start(port string) {
 		lists.GET("", s.Lists.GetAll())
 
 		lists.GET("/:id", s.Lists.GetById())
-		lists.PATCH("/:id", s.Lists.UpdateById())
+		lists.PATCH("/:id", s.Lists.Update())
 		lists.DELETE("/:id", s.Lists.DeleteById())
 
 		lists.POST("/:id/channels", s.Lists.AddChannel())

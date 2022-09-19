@@ -1,28 +1,38 @@
 package main
 
 import (
-	"os"
+	"log"
 
 	"github.com/tabo-syu/youtube-subscription-viewer-api/infrastructures"
 )
 
-var conf *infrastructures.Config
+var (
+	sql     *infrastructures.SqlHandler
+	youtube *infrastructures.YoutubeHandler
+	err     error
+)
 
 func init() {
-	conf = &infrastructures.Config{
-		DB: infrastructures.DB{
-			Host:     os.Getenv("DB_HOST"),
-			Port:     os.Getenv("DB_PORT"),
-			Name:     os.Getenv("DB_NAME"),
-			User:     os.Getenv("DB_USER"),
-			Password: os.Getenv("DB_PASSWORD"),
-			TimeZone: os.Getenv("DB_TIMEZONE"),
-		},
-		Youtube: infrastructures.Youtube{},
+	config := infrastructures.NewConfig()
+
+	sql, err = infrastructures.NewSqlHandler(&config.DB)
+	if err != nil {
+		log.Fatalf("Cannot connect DB")
 	}
+
+	youtube = infrastructures.NewYoutubeHandler(&config.Youtube)
+	// if err != nil {
+	// 	log.Fatalf("Cannot connect YouTube API")
+	// }
 }
 
 func main() {
-	server := infrastructures.NewServer(conf)
+	defer sql.Close()
+
+	server, err := infrastructures.NewServer(sql, youtube)
+	if err != nil {
+		log.Fatalf("Cannot start the server")
+	}
+
 	server.Start("8080")
 }

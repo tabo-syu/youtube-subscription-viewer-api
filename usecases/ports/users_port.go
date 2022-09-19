@@ -1,7 +1,6 @@
 package ports
 
 import (
-	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 )
 
@@ -12,11 +11,11 @@ type UsersRepository interface {
 }
 
 type UsersInputPort interface {
-	GetMyself(echo.Context) error
-	GetMySubscriptions(echo.Context) error
+	GetMyself() error
+	GetMySubscriptions() error
 }
 
 type UsersOutputPort interface {
-	OutputUsers(echo.Context, []*entities.User) error
-	OutputUser(echo.Context, *entities.User) error
+	OutputUsers([]*entities.User) error
+	OutputUser(*entities.User) error
 }

@@ -1,7 +1,6 @@
 package ports
 
 import (
-	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 )
 
@@ -17,14 +16,14 @@ type ListsRepository interface {
 }
 
 type ListsInputPort interface {
-	Create(echo.Context, *entities.List) error
-	GetAll(echo.Context) error
-	GetById(echo.Context, entities.ListId) error
-	Update(echo.Context, *entities.List) error
-	DeleteById(echo.Context, entities.ListId) error
+	Create(*entities.List) error
+	GetAll() error
+	GetById(entities.ListId) error
+	Update(*entities.List) error
+	DeleteById(entities.ListId) error
 }
 
 type ListsOutputPort interface {
-	OutputLists(echo.Context, []*entities.List) error
-	OutputList(echo.Context, *entities.List) error
+	OutputLists([]*entities.List) error
+	OutputList(*entities.List) error
 }
