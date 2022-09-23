@@ -12,7 +12,7 @@ type YoutubeAuthsController struct {
 	authorization *gateways.YoutubeAuthorization
 }
 
-func NewYoutubeAuthsController(a interfaces.YoutubeOAuth2Handler) *YoutubeAuthsController {
+func NewYoutubeAuthsController(s interfaces.SqlHandler, a interfaces.YoutubeOAuth2Handler, y interfaces.YoutubeHandler) *YoutubeAuthsController {
 	return &YoutubeAuthsController{
 		gateways.NewYoutubeAuthorization(a),
 	}
@@ -29,6 +29,16 @@ func (c *YoutubeAuthsController) interactor(ctx echo.Context) *interactors.Youtu
 func (c *YoutubeAuthsController) Authorize(contextKey string) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		state := ctx.Get(contextKey).(string)
+
 		return c.interactor(ctx).Authorize(state)
+	}
+}
+
+func (c *YoutubeAuthsController) Login() echo.HandlerFunc {
+	return func(ctx echo.Context) error {
+		return c.interactor(ctx).Login(
+			ctx.Request().Context(),
+			ctx.QueryParam("code"),
+		)
 	}
 }

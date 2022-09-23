@@ -18,7 +18,7 @@ type Server struct {
 
 func NewServer(db *SqlHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHandler) (*Server, error) {
 	return &Server{
-		controllers.NewYoutubeAuthsController(oauth2),
+		controllers.NewYoutubeAuthsController(db, oauth2, youtube),
 		controllers.NewUsersController(db, youtube),
 		controllers.NewListsController(db, youtube),
 		controllers.NewChannelsController(db, youtube),
@@ -40,8 +40,7 @@ func (s *Server) Start(port string) {
 		)
 
 		users.GET("/auth", s.Authorizations.Authorize(middleware.DefaultCSRFConfig.ContextKey), authCSRF)
-		users.GET("/login", s.Users.Login(), authCSRF)
-
+		users.GET("/login", s.Authorizations.Login(), authCSRF)
 		users.GET("/logout", s.Users.Logout())
 
 		users.GET("/me", s.Users.GetMyself())

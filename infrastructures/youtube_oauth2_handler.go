@@ -2,6 +2,7 @@ package infrastructures
 
 import (
 	"context"
+	"net/http"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -27,4 +28,8 @@ func (h *YoutubeOAuth2Handler) AuthCodeUrl(state string) string {
 
 func (h *YoutubeOAuth2Handler) Exchange(ctx context.Context, code string) (*oauth2.Token, error) {
 	return h.config.Exchange(ctx, code)
+}
+
+func (h *YoutubeOAuth2Handler) Client(ctx context.Context, token *oauth2.Token) *http.Client {
+	return h.config.Client(ctx, token)
 }

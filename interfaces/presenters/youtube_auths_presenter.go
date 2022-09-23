@@ -20,3 +20,7 @@ func NewYoutubeAuthsPresenter(ctx echo.Context) *YoutubeAuthsPresenter {
 func (p *YoutubeAuthsPresenter) OutputRedirectUrl(url string) error {
 	return p.ctx.Redirect(http.StatusSeeOther, url)
 }
+
+func (p *YoutubeAuthsPresenter) Test(id string) error {
+	return p.ctx.String(http.StatusOK, id)
+}
