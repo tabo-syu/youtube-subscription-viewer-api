@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/gateways"
@@ -26,19 +28,24 @@ func (c *YoutubeAuthsController) interactor(ctx echo.Context) *interactors.Youtu
 	)
 }
 
-func (c *YoutubeAuthsController) Authorize(contextKey string) echo.HandlerFunc {
+func (c *YoutubeAuthsController) Authorize(stateKey string) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
-		state := ctx.Get(contextKey).(string)
-
-		return c.interactor(ctx).Authorize(state)
+		return c.interactor(ctx).Authorize(
+			ctx.Get(stateKey).(string),
+		)
 	}
 }
 
 func (c *YoutubeAuthsController) Login() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
+		code := ctx.QueryParam("code")
+		if code == "" {
+			return echo.NewHTTPError(http.StatusBadRequest, "missing code token in the query string")
+		}
+
 		return c.interactor(ctx).Login(
 			ctx.Request().Context(),
-			ctx.QueryParam("code"),
+			code,
 		)
 	}
 }

@@ -2,11 +2,11 @@ package infrastructures
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/controllers"
+	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/middlewares"
 )
 
 type Server struct {
@@ -31,16 +31,12 @@ func (s *Server) Start(port string) {
 
 	users := e.Group("/users")
 	{
-		authCSRF := middleware.CSRFWithConfig(
-			middleware.CSRFConfig{
-				TokenLookup:    "query:state",
-				CookieHTTPOnly: true,
-				CookieSameSite: http.SameSiteLaxMode,
-			},
+		oauthChecker := middlewares.OAuthStateChecker(middlewares.DefaultCheckerConfig)
+		users.GET("/auth",
+			s.Authorizations.Authorize(middlewares.DefaultCheckerConfig.StateKey),
+			oauthChecker,
 		)
-
-		users.GET("/auth", s.Authorizations.Authorize(middleware.DefaultCSRFConfig.ContextKey), authCSRF)
-		users.GET("/login", s.Authorizations.Login(), authCSRF)
+		users.GET("/login", s.Authorizations.Login(), oauthChecker)
 		users.GET("/logout", s.Users.Logout())
 
 		users.GET("/me", s.Users.GetMyself())
