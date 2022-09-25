@@ -43,6 +43,15 @@ func Migrate(sql *infrastructures.SqlHandler) error {
 			FOREIGN KEY (channel_id) REFERENCES channels (id)
 		);
 
+		CREATE TABLE IF NOT EXISTS user_subscribe_channels (
+			id         serial      PRIMARY KEY,
+			user_id    varchar(24) NOT NULL,
+			channel_id varchar(24) NOT NULL,
+			
+			FOREIGN KEY (user_id)    REFERENCES users    (id),
+			FOREIGN KEY (channel_id) REFERENCES channels (id)
+		);
+
 		CREATE TABLE IF NOT EXISTS videos (
 			id           varchar(11)              PRIMARY KEY,
 			title        varchar(100)             NOT NULL,
