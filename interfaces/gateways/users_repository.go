@@ -4,20 +4,20 @@ import (
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
+	"golang.org/x/oauth2"
 )
 
 type UsersRepository struct {
-	sql     interfaces.SqlHandler
-	youtube interfaces.YoutubeHandler
+	sql interfaces.SqlHandler
 }
 
 var _ ports.UsersRepository = (*UsersRepository)(nil)
 
-func NewUsersRepository(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *UsersRepository {
-	return &UsersRepository{s, y}
+func NewUsersRepository(s interfaces.SqlHandler) *UsersRepository {
+	return &UsersRepository{s}
 }
 
-func (r *UsersRepository) RegisterUser(user *entities.User) (*entities.User, error) {
+func (r *UsersRepository) RegisterUser(user *entities.User, token *oauth2.Token) (*entities.User, error) {
 	return &entities.User{}, nil
 }
 

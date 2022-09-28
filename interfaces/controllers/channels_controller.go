@@ -9,12 +9,14 @@ import (
 )
 
 type ChannelsController struct {
-	repository *gateways.ChannelsRepository
+	channelsRepository        *gateways.ChannelsRepository
+	youtubeChannelsRepository *gateways.YoutubeChannelsRepository
 }
 
 func NewChannelsController(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *ChannelsController {
 	return &ChannelsController{
-		gateways.NewChannelsRepository(s, y),
+		gateways.NewChannelsRepository(s),
+		gateways.NewYoutubeChannelsRepository(y),
 	}
 }
 
@@ -24,7 +26,7 @@ func (c *ChannelsController) interactor(ctx echo.Context) *interactors.ChannelsI
 		presenters.NewChannelsPresenter(ctx),
 		presenters.NewVideosPresenter(ctx),
 		presenters.NewErrorsPresenter(ctx),
-		c.repository,
+		c.channelsRepository,
 	)
 }
 

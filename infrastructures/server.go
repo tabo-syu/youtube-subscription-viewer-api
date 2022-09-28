@@ -37,7 +37,7 @@ func (s *Server) Start(port string) {
 			oauthChecker,
 		)
 		users.GET("/login", s.Authorizations.Login(), oauthChecker)
-		users.GET("/logout", s.Users.Logout())
+		users.GET("/logout", s.Authorizations.Logout())
 
 		users.GET("/me", s.Users.GetMyself())
 		users.GET("/me/subscriptions", s.Users.GetMySubscriptions())

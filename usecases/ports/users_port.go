@@ -2,10 +2,11 @@ package ports
 
 import (
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
+	"golang.org/x/oauth2"
 )
 
 type UsersRepository interface {
-	RegisterUser(*entities.User) (*entities.User, error)
+	RegisterUser(*entities.User, *oauth2.Token) (*entities.User, error)
 	GetMyself() (*entities.User, error)
 	GetMySubscriptions() ([]*entities.Video, error)
 }

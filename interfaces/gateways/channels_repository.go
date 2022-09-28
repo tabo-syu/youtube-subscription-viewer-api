@@ -7,16 +7,17 @@ import (
 )
 
 type ChannelsRepository struct {
-	sql     interfaces.SqlHandler
-	youtube interfaces.YoutubeHandler
+	sql interfaces.SqlHandler
 }
 
 var _ ports.ChannelsRepository = (*ChannelsRepository)(nil)
 
-func NewChannelsRepository(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *ChannelsRepository {
-	return &ChannelsRepository{s, y}
+func NewChannelsRepository(s interfaces.SqlHandler) *ChannelsRepository {
+	return &ChannelsRepository{s}
 }
 
 func (r *ChannelsRepository) GetFeed() ([]*entities.Video, error) {
 	return []*entities.Video{}, nil
 }
+
+// func (r *ChannelsRepository) GetMyChannel()

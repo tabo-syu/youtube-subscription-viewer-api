@@ -7,14 +7,13 @@ import (
 )
 
 type ListsRepository struct {
-	sql     interfaces.SqlHandler
-	youtube interfaces.YoutubeHandler
+	sql interfaces.SqlHandler
 }
 
 var _ ports.ListsRepository = (*ListsRepository)(nil)
 
-func NewListsRepository(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *ListsRepository {
-	return &ListsRepository{s, y}
+func NewListsRepository(s interfaces.SqlHandler) *ListsRepository {
+	return &ListsRepository{s}
 }
 
 func (r *ListsRepository) Create(list *entities.List) (*entities.List, error) {

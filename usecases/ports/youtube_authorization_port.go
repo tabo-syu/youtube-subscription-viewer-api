@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"golang.org/x/oauth2"
 )
 
@@ -19,5 +20,5 @@ type YoutubeAuthsInputPort interface {
 
 type YoutubeAuthsOutputPort interface {
 	OutputRedirectUrl(string) error
-	Test(string) error
+	Test(*entities.User) error
 }

@@ -14,7 +14,7 @@ type UsersController struct {
 
 func NewUsersController(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *UsersController {
 	return &UsersController{
-		gateways.NewUsersRepository(s, y),
+		gateways.NewUsersRepository(s),
 	}
 }
 
@@ -25,18 +25,6 @@ func (c *UsersController) interactor(ctx echo.Context) *interactors.UsersInterac
 		presenters.NewErrorsPresenter(ctx),
 		c.repository,
 	)
-}
-
-func (c *UsersController) Login() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		return nil
-	}
-}
-
-func (c *UsersController) Logout() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		return nil
-	}
 }
 
 func (c *UsersController) GetMyself() echo.HandlerFunc {

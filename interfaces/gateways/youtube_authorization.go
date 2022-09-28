@@ -12,8 +12,8 @@ type YoutubeAuthorization struct {
 	oAuth2 interfaces.YoutubeOAuth2Handler
 }
 
-func NewYoutubeAuthorization(g interfaces.YoutubeOAuth2Handler) *YoutubeAuthorization {
-	return &YoutubeAuthorization{g}
+func NewYoutubeAuthorization(o interfaces.YoutubeOAuth2Handler) *YoutubeAuthorization {
+	return &YoutubeAuthorization{o}
 }
 
 func (a *YoutubeAuthorization) AuthCodeUrl(state string) string {

@@ -32,6 +32,8 @@ func init() {
 	if err != nil {
 		log.Fatalf("Cannot initialize OAuth handler")
 	}
+
+	youtube = infrastructures.NewYoutubeHandler()
 }
 
 func main() {

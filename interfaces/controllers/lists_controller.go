@@ -15,7 +15,7 @@ type ListsController struct {
 
 func NewListsController(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *ListsController {
 	return &ListsController{
-		gateways.NewListsRepository(s, y),
+		gateways.NewListsRepository(s),
 	}
 }
 

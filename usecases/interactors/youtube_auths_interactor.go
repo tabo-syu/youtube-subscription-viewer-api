@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
-	"google.golang.org/api/option"
-	"google.golang.org/api/youtube/v3"
 )
 
 type YoutubeAuthsInteractor struct {
-	YoutubeAuthsOutputPort ports.YoutubeAuthsOutputPort
-	errorsOutput           ports.ErrorsOutputPort
-	YoutubeAuthorization   ports.YoutubeAuthorization
+	youtubeAuthsOutputPort    ports.YoutubeAuthsOutputPort
+	errorsOutput              ports.ErrorsOutputPort
+	youtubeAuthorization      ports.YoutubeAuthorization
+	youtubeChannelsRepository ports.YoutubeChannelsRepository
+	usersRepository           ports.UsersRepository
 }
 
 var _ ports.YoutubeAuthsInputPort = (*YoutubeAuthsInteractor)(nil)
@@ -19,33 +19,43 @@ var _ ports.YoutubeAuthsInputPort = (*YoutubeAuthsInteractor)(nil)
 func NewYoutubeAuthsInteractor(
 	ao ports.YoutubeAuthsOutputPort,
 	eo ports.ErrorsOutputPort,
-	ga ports.YoutubeAuthorization,
+	ya ports.YoutubeAuthorization,
+	ur ports.UsersRepository,
+	yr ports.YoutubeChannelsRepository,
 ) *YoutubeAuthsInteractor {
-	return &YoutubeAuthsInteractor{ao, eo, ga}
+	return &YoutubeAuthsInteractor{ao, eo, ya, yr, ur}
 }
 
 func (i *YoutubeAuthsInteractor) Authorize(state string) error {
-	url := i.YoutubeAuthorization.AuthCodeUrl(state)
+	url := i.youtubeAuthorization.AuthCodeUrl(state)
 
-	return i.YoutubeAuthsOutputPort.OutputRedirectUrl(url)
+	return i.youtubeAuthsOutputPort.OutputRedirectUrl(url)
 }
 
 func (i *YoutubeAuthsInteractor) Login(ctx context.Context, code string) error {
-	token, err := i.YoutubeAuthorization.Exchange(ctx, code)
+	token, err := i.youtubeAuthorization.Exchange(ctx, code)
 	if err != nil {
 		return err
 	}
 
-	client := i.YoutubeAuthorization.Client(ctx, token)
-	youtube, err := youtube.NewService(ctx, option.WithHTTPClient(client))
+	client := i.youtubeAuthorization.Client(ctx, token)
+	if err = i.youtubeChannelsRepository.AddClient(ctx, client); err != nil {
+		return err
+	}
+
+	user, err := i.youtubeChannelsRepository.GetMyChannel()
 	if err != nil {
 		return err
 	}
 
-	res, err := youtube.Channels.List([]string{"id"}).Mine(true).Do()
-	if err != nil {
-		return err
-	}
+	// user, err = i.usersRepository.RegisterUser(user, token)
+	// if err != nil {
+	// 	return err
+	// }
 
-	return i.YoutubeAuthsOutputPort.Test(res.Items[0].Id)
+	return i.youtubeAuthsOutputPort.Test(user)
+}
+
+func (i *YoutubeAuthsInteractor) Logout(ctx context.Context) error {
+	return nil
 }
