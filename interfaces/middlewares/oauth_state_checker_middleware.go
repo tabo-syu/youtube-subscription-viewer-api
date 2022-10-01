@@ -24,7 +24,9 @@ var (
 	ErrStateInvalid = echo.NewHTTPError(http.StatusForbidden, "invalid state token")
 )
 
-func OAuthStateChecker(config CheckerConfig) echo.MiddlewareFunc {
+type OAuthStateCheckerFunc = echo.MiddlewareFunc
+
+func OAuthStateChecker(config CheckerConfig) OAuthStateCheckerFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if c.QueryParam(config.CodeQuery) != "" {

@@ -3,20 +3,17 @@ package controllers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
-	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/gateways"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/presenters"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/interactors"
 )
 
 type ListsController struct {
-	repository *gateways.ListsRepository
+	lists *gateways.ListsRepository
 }
 
-func NewListsController(s interfaces.SqlHandler, y interfaces.YoutubeHandler) *ListsController {
-	return &ListsController{
-		gateways.NewListsRepository(s),
-	}
+func NewListsController(l *gateways.ListsRepository) *ListsController {
+	return &ListsController{l}
 }
 
 func (c *ListsController) interactor(ctx echo.Context) *interactors.ListsInteractor {
@@ -25,7 +22,7 @@ func (c *ListsController) interactor(ctx echo.Context) *interactors.ListsInterac
 		presenters.NewChannelsPresenter(ctx),
 		presenters.NewVideosPresenter(ctx),
 		presenters.NewErrorsPresenter(ctx),
-		c.repository,
+		c.lists,
 	)
 }
 

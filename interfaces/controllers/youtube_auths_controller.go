@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/gateways"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/presenters"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/interactors"
@@ -16,12 +15,12 @@ type YoutubeAuthsController struct {
 	youtubeChannels *gateways.YoutubeChannelsRepository
 }
 
-func NewYoutubeAuthsController(s interfaces.SqlHandler, a interfaces.YoutubeOAuth2Handler, y interfaces.YoutubeHandler) *YoutubeAuthsController {
-	return &YoutubeAuthsController{
-		gateways.NewUsersRepository(s),
-		gateways.NewYoutubeAuthorization(a),
-		gateways.NewYoutubeChannelsRepository(y),
-	}
+func NewYoutubeAuthsController(
+	ur *gateways.UsersRepository,
+	ya *gateways.YoutubeAuthorization,
+	ycr *gateways.YoutubeChannelsRepository,
+) *YoutubeAuthsController {
+	return &YoutubeAuthsController{ur, ya, ycr}
 }
 
 func (c *YoutubeAuthsController) interactor(ctx echo.Context) *interactors.YoutubeAuthsInteractor {
