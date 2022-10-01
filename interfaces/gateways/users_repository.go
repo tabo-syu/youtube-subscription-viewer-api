@@ -30,8 +30,22 @@ func (r *UsersRepository) RegisterUser(user *entities.User, token *oauth2.Token)
 	return nil
 }
 
-func (r *UsersRepository) GetMyself() (*entities.User, error) {
-	return &entities.User{}, nil
+func (r *UsersRepository) Get(id string) (*entities.User, *oauth2.Token, error) {
+	var (
+		user  = entities.User{}
+		token = oauth2.Token{
+			TokenType: "bearer",
+		}
+	)
+	err := r.sql.QueryRow(`
+		SELECT id, name, thumbnail, access_token, refresh_token, expiry FROM users WHERE id = $1`,
+		id,
+	).Scan(&user.Id, &user.Name, &user.Thumbnail, &token.AccessToken, &token.RefreshToken, &token.Expiry)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return &user, &token, nil
 }
 
 func (r *UsersRepository) GetMySubscriptions() ([]*entities.Video, error) {

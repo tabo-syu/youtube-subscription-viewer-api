@@ -23,12 +23,13 @@ func NewUsersInteractor(
 }
 
 func (i *UsersInteractor) GetMyself() error {
-	me, err := i.usersRepository.GetMyself()
-	if err != nil {
-		return i.errorsOutput.OutputError()
-	}
+	// me, err := i.usersRepository.Get()
+	// if err != nil {
+	// 	return i.errorsOutput.OutputError()
+	// }
 
-	return i.usersOutput.OutputUser(me)
+	// return i.usersOutput.OutputUser(me)
+	return nil
 }
 
 func (i *UsersInteractor) GetMySubscriptions() error {

@@ -52,7 +52,7 @@ func (i *YoutubeAuthsInteractor) Login(ctx context.Context, code string) error {
 		return err
 	}
 
-	return i.youtubeAuthsOutputPort.Test(token)
+	return i.youtubeAuthsOutputPort.Login(user)
 }
 
 func (i *YoutubeAuthsInteractor) Logout(ctx context.Context) error {

@@ -40,3 +40,7 @@ func (s *SqlHandler) Close() error {
 func (s *SqlHandler) Exec(query string, args ...any) (sql.Result, error) {
 	return s.db.Exec(query, args...)
 }
+
+func (s *SqlHandler) QueryRow(query string, args ...any) *sql.Row {
+	return s.db.QueryRow(query, args...)
+}

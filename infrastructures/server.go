@@ -58,7 +58,6 @@ func (s *Server) Start(port string) {
 		session.Middleware(
 			sessions.NewFilesystemStore("", []byte(os.Getenv("SESSION_KEY"))),
 		),
-		s.Middlewares.Authenticator,
 	)
 
 	users := e.Group("/users")
@@ -70,7 +69,7 @@ func (s *Server) Start(port string) {
 		users.GET("/login", s.Controllers.Authorizations.Login(), s.Middlewares.OAuthStateChecker)
 
 		users.GET("/logout", s.Controllers.Authorizations.Logout())
-		users.GET("/me", s.Controllers.Users.GetMyself())
+		users.GET("/me", s.Controllers.Users.GetMyself(), s.Middlewares.Authenticator)
 		users.GET("/me/subscriptions", s.Controllers.Users.GetMySubscriptions())
 	}
 
