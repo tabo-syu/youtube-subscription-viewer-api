@@ -5,24 +5,24 @@ import (
 )
 
 func Migrate(sql *infrastructures.SqlHandler) error {
-	_, err := sql.Exec(
-		`
+	_, err := sql.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
-			id            varchar(24) PRIMARY KEY,
-			name          text        NOT NULL,
-			thumbnail     text        NOT NULL,
-			access_token  text        NOT NULL,
-			refresh_token text        NOT NULL,
-			created_at timestamp with time zone DEFAULT NOW() NOT NULL,
-			updated_at timestamp with time zone DEFAULT NOW() NOT NULL
+			id            varchar(24)                            PRIMARY KEY,
+			name          text                                   NOT NULL,
+			thumbnail     text                                   NOT NULL,
+			access_token  text                                   NOT NULL,
+			refresh_token text                                   NOT NULL,
+			expiry        timestamp with time zone               NOT NULL,
+			created_at    timestamp with time zone DEFAULT NOW() NOT NULL,
+			updated_at    timestamp with time zone DEFAULT NOW() NOT NULL
 		);
 
 		CREATE TABLE IF NOT EXISTS lists (
 			id         uuid                     DEFAULT gen_random_uuid() PRIMARY KEY,
-			title      varchar(100)             NOT NULL,
-			user_id    varchar(24)              NOT NULL,
-			created_at timestamp with time zone DEFAULT NOW() NOT NULL,
-			updated_at timestamp with time zone DEFAULT NOW() NOT NULL,
+			title      varchar(100)                                       NOT NULL,
+			user_id    varchar(24)                                        NOT NULL,
+			created_at timestamp with time zone DEFAULT NOW()             NOT NULL,
+			updated_at timestamp with time zone DEFAULT NOW()             NOT NULL,
 
 			FOREIGN KEY (user_id) REFERENCES users (id)
 		);
@@ -62,8 +62,7 @@ func Migrate(sql *infrastructures.SqlHandler) error {
 			
 			FOREIGN KEY (channel_id) REFERENCES channels (id)
 		);
-		`,
-	)
+	`)
 	if err != nil {
 		return err
 	}

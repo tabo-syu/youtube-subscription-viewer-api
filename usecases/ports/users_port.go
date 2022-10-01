@@ -6,7 +6,7 @@ import (
 )
 
 type UsersRepository interface {
-	RegisterUser(*entities.User, *oauth2.Token) (*entities.User, error)
+	RegisterUser(*entities.User, *oauth2.Token) error
 	GetMyself() (*entities.User, error)
 	GetMySubscriptions() ([]*entities.Video, error)
 }

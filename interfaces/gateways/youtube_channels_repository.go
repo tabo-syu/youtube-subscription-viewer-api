@@ -39,6 +39,7 @@ func (r *YoutubeChannelsRepository) GetMyChannel() (*entities.User, error) {
 	}
 
 	user := entities.User{
+		Id:        res.Items[0].Id,
 		Name:      res.Items[0].Snippet.Title,
 		Thumbnail: res.Items[0].Snippet.Thumbnails.High.Url,
 	}

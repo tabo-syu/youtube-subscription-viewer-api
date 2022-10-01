@@ -48,12 +48,11 @@ func (i *YoutubeAuthsInteractor) Login(ctx context.Context, code string) error {
 		return err
 	}
 
-	// user, err = i.usersRepository.RegisterUser(user, token)
-	// if err != nil {
-	// 	return err
-	// }
+	if err := i.usersRepository.RegisterUser(user, token); err != nil {
+		return err
+	}
 
-	return i.youtubeAuthsOutputPort.Test(user)
+	return i.youtubeAuthsOutputPort.Test(token)
 }
 
 func (i *YoutubeAuthsInteractor) Logout(ctx context.Context) error {
