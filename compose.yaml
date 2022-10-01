@@ -11,7 +11,7 @@ services:
       - db
 
   db:
-    image: "postgres:14.4-alpine"
+    image: postgres:14.4-alpine
     restart: always
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       TZ: ${DB_TIMEZONE}
     volumes:
-      - "db-data:/var/lib/postgresql/data"
+      - db-data:/var/lib/postgresql/data
 
 volumes:
   db-data:
