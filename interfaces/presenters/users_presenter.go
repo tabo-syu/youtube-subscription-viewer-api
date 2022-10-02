@@ -1,6 +1,8 @@
 package presenters
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
@@ -21,5 +23,5 @@ func (p *UsersPresenter) OutputUsers(users []*entities.User) error {
 }
 
 func (p *UsersPresenter) OutputUser(user *entities.User) error {
-	return nil
+	return p.ctx.JSON(http.StatusOK, user)
 }

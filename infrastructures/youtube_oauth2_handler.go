@@ -33,3 +33,7 @@ func (h *YoutubeOAuth2Handler) Exchange(ctx context.Context, code string) (*oaut
 func (h *YoutubeOAuth2Handler) Client(ctx context.Context, token *oauth2.Token) *http.Client {
 	return h.config.Client(ctx, token)
 }
+
+func (h *YoutubeOAuth2Handler) TokenSource(ctx context.Context, token *oauth2.Token) oauth2.TokenSource {
+	return h.config.TokenSource(ctx, token)
+}

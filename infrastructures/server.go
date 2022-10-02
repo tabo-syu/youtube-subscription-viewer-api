@@ -46,7 +46,7 @@ func NewServer(db *SqlHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHan
 		},
 		Middlewares{
 			middlewares.OAuthStateChecker(middlewares.DefaultCheckerConfig),
-			middlewares.Authenticator(ur, middlewares.DefaultAuthenticatorConfig),
+			middlewares.Authenticator(ur, ya, middlewares.DefaultAuthenticatorConfig),
 		},
 	}, nil
 }

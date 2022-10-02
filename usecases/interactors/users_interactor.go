@@ -1,6 +1,7 @@
 package interactors
 
 import (
+	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
 )
 
@@ -22,14 +23,8 @@ func NewUsersInteractor(
 	return &UsersInteractor{uo, vo, eo, ur}
 }
 
-func (i *UsersInteractor) GetMyself() error {
-	// me, err := i.usersRepository.Get()
-	// if err != nil {
-	// 	return i.errorsOutput.OutputError()
-	// }
-
-	// return i.usersOutput.OutputUser(me)
-	return nil
+func (i *UsersInteractor) GetMyself(user *entities.User) error {
+	return i.usersOutput.OutputUser(user)
 }
 
 func (i *UsersInteractor) GetMySubscriptions() error {

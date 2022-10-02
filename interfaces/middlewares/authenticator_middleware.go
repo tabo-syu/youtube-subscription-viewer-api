@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/gateways"
+	"golang.org/x/oauth2"
 )
 
 type AuthenticatorConfig struct {
@@ -24,14 +25,38 @@ var (
 			SameSite: http.SameSiteLaxMode,
 		},
 	}
-	ErrUnauthorized = echo.NewHTTPError(http.StatusUnauthorized, "user is unauthorized")
+	ErrUnauthorized  = echo.NewHTTPError(http.StatusUnauthorized, "user is unauthorized")
+	ErrInternalError = echo.NewHTTPError(http.StatusInternalServerError, "cannot update token")
 )
+
+type userTokenSource struct {
+	src    oauth2.TokenSource
+	users  *gateways.UsersRepository
+	userId string
+}
+
+func newUserTokenSouce(src oauth2.TokenSource, users *gateways.UsersRepository, userId string) *userTokenSource {
+	return &userTokenSource{src, users, userId}
+}
+
+// リフレッシュトークンを使い、アクセストークンを更新する。
+// アクセストークンが更新された場合には、DB へキャッシュする。
+func (s *userTokenSource) Token() (*oauth2.Token, error) {
+	token, err := s.src.Token()
+	if err != nil {
+		return nil, err
+	}
+
+	return token, s.users.UpdateToken(s.userId, token)
+}
 
 type AuthenticatorFunc = echo.MiddlewareFunc
 
-func Authenticator(users *gateways.UsersRepository, config AuthenticatorConfig) AuthenticatorFunc {
+func Authenticator(users *gateways.UsersRepository, auth *gateways.YoutubeAuthorization, config AuthenticatorConfig) AuthenticatorFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+			ctx := c.Request().Context()
+
 			sess, _ := session.Get(config.CookieName, c)
 			sess.Options = config.Session
 			userId, ok := sess.Values["user_id"]
@@ -43,8 +68,13 @@ func Authenticator(users *gateways.UsersRepository, config AuthenticatorConfig) 
 				return ErrUnauthorized
 			}
 
+			// トークンの更新処理
+			tokenSouce := auth.TokenSource(ctx, token)
+			userTokenSouce := newUserTokenSouce(tokenSouce, users, userId.(string))
+			client := oauth2.NewClient(ctx, oauth2.ReuseTokenSource(token, userTokenSouce))
+
 			c.Set("user", user)
-			c.Set("token", token)
+			c.Set("client", client)
 
 			return next(c)
 		}

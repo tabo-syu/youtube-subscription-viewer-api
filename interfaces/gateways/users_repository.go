@@ -1,6 +1,8 @@
 package gateways
 
 import (
+	"log"
+
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
@@ -27,6 +29,8 @@ func (r *UsersRepository) RegisterUser(user *entities.User, token *oauth2.Token)
 		return err
 	}
 
+	log.Println("user is registerd", "user_id:", user.Id)
+
 	return nil
 }
 
@@ -46,6 +50,20 @@ func (r *UsersRepository) Get(id string) (*entities.User, *oauth2.Token, error) 
 	}
 
 	return &user, &token, nil
+}
+
+func (r *UsersRepository) UpdateToken(userId string, token *oauth2.Token) error {
+	_, err := r.sql.Exec(
+		`UPDATE users SET access_token = $2, refresh_token = $3, expiry = $4 WHERE id = $1`,
+		userId, token.AccessToken, token.RefreshToken, token.Expiry,
+	)
+	if err != nil {
+		return err
+	}
+
+	log.Println("token is updated", "user_id:", userId)
+
+	return nil
 }
 
 func (r *UsersRepository) GetMySubscriptions() ([]*entities.Video, error) {

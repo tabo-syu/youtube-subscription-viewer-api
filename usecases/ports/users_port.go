@@ -12,7 +12,7 @@ type UsersRepository interface {
 }
 
 type UsersInputPort interface {
-	GetMyself() error
+	GetMyself(*entities.User) error
 	GetMySubscriptions() error
 }
 

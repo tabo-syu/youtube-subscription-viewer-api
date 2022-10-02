@@ -21,14 +21,13 @@ func (a *YoutubeAuthorization) AuthCodeUrl(state string) string {
 }
 
 func (a *YoutubeAuthorization) Exchange(ctx context.Context, code string) (*oauth2.Token, error) {
-	token, err := a.oAuth2.Exchange(ctx, code)
-	if err != nil {
-		return nil, err
-	}
-
-	return token, nil
+	return a.oAuth2.Exchange(ctx, code)
 }
 
 func (a *YoutubeAuthorization) Client(ctx context.Context, token *oauth2.Token) *http.Client {
 	return a.oAuth2.Client(ctx, token)
+}
+
+func (a *YoutubeAuthorization) TokenSource(ctx context.Context, token *oauth2.Token) oauth2.TokenSource {
+	return a.oAuth2.TokenSource(ctx, token)
 }

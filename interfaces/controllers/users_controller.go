@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/gateways"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces/presenters"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/interactors"
@@ -26,7 +29,12 @@ func (c *UsersController) interactor(ctx echo.Context) *interactors.UsersInterac
 
 func (c *UsersController) GetMyself() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
-		return c.interactor(ctx).GetMyself()
+		user, ok := ctx.Get("user").(*entities.User)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
+		return c.interactor(ctx).GetMyself(user)
 	}
 }
 
