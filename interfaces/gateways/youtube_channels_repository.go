@@ -19,16 +19,8 @@ func NewYoutubeChannelsRepository(y interfaces.YoutubeHandler) *YoutubeChannelsR
 	return &YoutubeChannelsRepository{y}
 }
 
-func (r *YoutubeChannelsRepository) AddClient(ctx context.Context, client *http.Client) error {
-	if err := r.youtube.AddClient(ctx, client); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r *YoutubeChannelsRepository) GetMyChannel() (*entities.User, error) {
-	channels, err := r.youtube.ListChannels([]string{"id", "snippet"})
+func (r *YoutubeChannelsRepository) GetMyChannel(ctx context.Context, client *http.Client) (*entities.User, error) {
+	channels, err := r.youtube.ListChannels(ctx, client, []string{"id", "snippet"})
 	if err != nil {
 		return nil, err
 	}

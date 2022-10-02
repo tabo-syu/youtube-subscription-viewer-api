@@ -8,6 +8,5 @@ import (
 )
 
 type YoutubeHandler interface {
-	ListChannels([]string) (*youtube.ChannelsListCall, error)
-	AddClient(context.Context, *http.Client) error
+	ListChannels(context.Context, *http.Client, []string) (*youtube.ChannelsListCall, error)
 }

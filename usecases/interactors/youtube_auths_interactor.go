@@ -39,11 +39,8 @@ func (i *YoutubeAuthsInteractor) Login(ctx context.Context, code string) error {
 	}
 
 	client := i.youtubeAuthorization.Client(ctx, token)
-	if err = i.youtubeChannelsRepository.AddClient(ctx, client); err != nil {
-		return err
-	}
 
-	user, err := i.youtubeChannelsRepository.GetMyChannel()
+	user, err := i.youtubeChannelsRepository.GetMyChannel(ctx, client)
 	if err != nil {
 		return err
 	}

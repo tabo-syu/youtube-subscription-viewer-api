@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
 )
@@ -14,24 +13,14 @@ type YoutubeHandler struct {
 }
 
 func NewYoutubeHandler() *YoutubeHandler {
-	return &YoutubeHandler{nil}
+	return &YoutubeHandler{}
 }
 
-func (h *YoutubeHandler) AddClient(ctx context.Context, client *http.Client) error {
+func (h *YoutubeHandler) ListChannels(ctx context.Context, client *http.Client, part []string) (*youtube.ChannelsListCall, error) {
 	service, err := youtube.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	h.youtube = service
-
-	return nil
-}
-
-func (h *YoutubeHandler) ListChannels(part []string) (*youtube.ChannelsListCall, error) {
-	if h.youtube == nil {
-		return nil, entities.ErrYoutubeHandlerInitError
-	}
-
-	return h.youtube.Channels.List(part), nil
+	return service.Channels.List(part), nil
 }

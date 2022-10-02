@@ -12,8 +12,7 @@ type ChannelsRepository interface {
 }
 
 type YoutubeChannelsRepository interface {
-	GetMyChannel() (*entities.User, error)
-	AddClient(context.Context, *http.Client) error
+	GetMyChannel(context.Context, *http.Client) (*entities.User, error)
 }
 
 type ChannelsInputPort interface {
