@@ -1,6 +1,8 @@
 package presenters
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
@@ -17,7 +19,7 @@ func NewChannelsPresenter(ctx echo.Context) *ChannelsPresenter {
 }
 
 func (p *ChannelsPresenter) OutputChannels(channels []*entities.Channel) error {
-	return nil
+	return p.ctx.JSON(http.StatusOK, channels)
 }
 
 func (p *ChannelsPresenter) OutputChannel(channel *entities.Channel) error {

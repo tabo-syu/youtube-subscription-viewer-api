@@ -34,13 +34,14 @@ func NewServer(db *SqlHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHan
 	ur := gateways.NewUsersRepository(db)
 	ya := gateways.NewYoutubeAuthorization(oauth2)
 	ycr := gateways.NewYoutubeChannelsRepository(youtube)
+	ysr := gateways.NewYoutubeSubscriptionsRepository(youtube)
 	cr := gateways.NewChannelsRepository(db)
 	lr := gateways.NewListsRepository(db)
 
 	return &Server{
 		Controllers{
 			controllers.NewYoutubeAuthsController(ur, ya, ycr),
-			controllers.NewUsersController(ur),
+			controllers.NewUsersController(ur, ysr),
 			controllers.NewListsController(lr),
 			controllers.NewChannelsController(cr, ycr),
 		},
@@ -70,7 +71,7 @@ func (s *Server) Start(port string) {
 
 		users.GET("/logout", s.Controllers.Authorizations.Logout())
 		users.GET("/me", s.Controllers.Users.GetMyself(), s.Middlewares.Authenticator)
-		users.GET("/me/subscriptions", s.Controllers.Users.GetMySubscriptions())
+		users.GET("/me/subscriptions", s.Controllers.Users.GetMySubscriptions(), s.Middlewares.Authenticator)
 	}
 
 	lists := e.Group("/lists")

@@ -11,19 +11,21 @@ import (
 )
 
 type UsersController struct {
-	users *gateways.UsersRepository
+	users                *gateways.UsersRepository
+	youtubeSubscriptions *gateways.YoutubeSubscrptionsRepository
 }
 
-func NewUsersController(u *gateways.UsersRepository) *UsersController {
-	return &UsersController{u}
+func NewUsersController(ur *gateways.UsersRepository, ysr *gateways.YoutubeSubscrptionsRepository) *UsersController {
+	return &UsersController{ur, ysr}
 }
 
 func (c *UsersController) interactor(ctx echo.Context) *interactors.UsersInteractor {
 	return interactors.NewUsersInteractor(
 		presenters.NewUsersPresenter(ctx),
-		presenters.NewVideosPresenter(ctx),
+		presenters.NewChannelsPresenter(ctx),
 		presenters.NewErrorsPresenter(ctx),
 		c.users,
+		c.youtubeSubscriptions,
 	)
 }
 
@@ -40,6 +42,14 @@ func (c *UsersController) GetMyself() echo.HandlerFunc {
 
 func (c *UsersController) GetMySubscriptions() echo.HandlerFunc {
 	return func(ctx echo.Context) error {
-		return c.interactor(ctx).GetMySubscriptions()
+		client, ok := ctx.Get("client").(*http.Client)
+		if !ok {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
+		return c.interactor(ctx).GetMySubscriptions(
+			ctx.Request().Context(),
+			client,
+		)
 	}
 }

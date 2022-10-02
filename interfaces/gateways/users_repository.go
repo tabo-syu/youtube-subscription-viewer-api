@@ -66,6 +66,6 @@ func (r *UsersRepository) UpdateToken(userId string, token *oauth2.Token) error 
 	return nil
 }
 
-func (r *UsersRepository) GetMySubscriptions() ([]*entities.Video, error) {
-	return []*entities.Video{}, nil
+func (r *UsersRepository) GetMySubscriptions() ([]*entities.Channel, error) {
+	return []*entities.Channel{}, nil
 }
