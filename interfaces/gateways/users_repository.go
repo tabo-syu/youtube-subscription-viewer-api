@@ -2,6 +2,7 @@ package gateways
 
 import (
 	"log"
+	"time"
 
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
@@ -54,8 +55,8 @@ func (r *UsersRepository) Get(id string) (*entities.User, *oauth2.Token, error) 
 
 func (r *UsersRepository) UpdateToken(userId string, token *oauth2.Token) error {
 	_, err := r.sql.Exec(
-		`UPDATE users SET access_token = $2, refresh_token = $3, expiry = $4 WHERE id = $1`,
-		userId, token.AccessToken, token.RefreshToken, token.Expiry,
+		`UPDATE users SET access_token = $2, refresh_token = $3, expiry = $4, updated_at = $5 WHERE id = $1`,
+		userId, token.AccessToken, token.RefreshToken, token.Expiry, time.Now(),
 	)
 	if err != nil {
 		return err
