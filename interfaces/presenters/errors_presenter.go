@@ -6,13 +6,13 @@ import (
 )
 
 type ErrorsPresenter struct {
-	ctx echo.Context
+	c echo.Context
 }
 
 var _ ports.ErrorsOutputPort = (*ErrorsPresenter)(nil)
 
-func NewErrorsPresenter(ctx echo.Context) *ErrorsPresenter {
-	return &ErrorsPresenter{ctx}
+func NewErrorsPresenter(c echo.Context) *ErrorsPresenter {
+	return &ErrorsPresenter{c}
 }
 
 func (p *ErrorsPresenter) OutputError() error {

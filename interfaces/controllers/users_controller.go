@@ -19,36 +19,36 @@ func NewUsersController(ur *gateways.UsersRepository, ysr *gateways.YoutubeSubsc
 	return &UsersController{ur, ysr}
 }
 
-func (c *UsersController) interactor(ctx echo.Context) *interactors.UsersInteractor {
+func (uc *UsersController) interactor(c echo.Context) *interactors.UsersInteractor {
 	return interactors.NewUsersInteractor(
-		presenters.NewUsersPresenter(ctx),
-		presenters.NewChannelsPresenter(ctx),
-		presenters.NewErrorsPresenter(ctx),
-		c.users,
-		c.youtubeSubscriptions,
+		presenters.NewUsersPresenter(c),
+		presenters.NewChannelsPresenter(c),
+		presenters.NewErrorsPresenter(c),
+		uc.users,
+		uc.youtubeSubscriptions,
 	)
 }
 
-func (c *UsersController) GetMyself() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		user, ok := ctx.Get("user").(*entities.User)
+func (uc *UsersController) GetMyself() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user, ok := c.Get("user").(*entities.User)
 		if !ok {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		return c.interactor(ctx).GetMyself(user)
+		return uc.interactor(c).GetMyself(user)
 	}
 }
 
-func (c *UsersController) GetMySubscriptions() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		client, ok := ctx.Get("client").(*http.Client)
+func (uc *UsersController) GetMySubscriptions() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		client, ok := c.Get("client").(*http.Client)
 		if !ok {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		return c.interactor(ctx).GetMySubscriptions(
-			ctx.Request().Context(),
+		return uc.interactor(c).GetMySubscriptions(
+			c.Request().Context(),
 			client,
 		)
 	}

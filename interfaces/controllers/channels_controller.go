@@ -16,18 +16,18 @@ func NewChannelsController(cr *gateways.ChannelsRepository, ycr *gateways.Youtub
 	return &ChannelsController{cr, ycr}
 }
 
-func (c *ChannelsController) interactor(ctx echo.Context) *interactors.ChannelsInteractor {
+func (cc *ChannelsController) interactor(c echo.Context) *interactors.ChannelsInteractor {
 	return interactors.NewChannelsInteractor(
-		presenters.NewListsPresenter(ctx),
-		presenters.NewChannelsPresenter(ctx),
-		presenters.NewVideosPresenter(ctx),
-		presenters.NewErrorsPresenter(ctx),
-		c.channels,
+		presenters.NewListsPresenter(c),
+		presenters.NewChannelsPresenter(c),
+		presenters.NewVideosPresenter(c),
+		presenters.NewErrorsPresenter(c),
+		cc.channels,
 	)
 }
 
-func (c *ChannelsController) GetFeed() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		return c.interactor(ctx).GetFeed()
+func (cc *ChannelsController) GetFeed() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return cc.interactor(c).GetFeed()
 	}
 }

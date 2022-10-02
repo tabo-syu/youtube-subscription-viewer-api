@@ -7,13 +7,13 @@ import (
 )
 
 type VideosPresenter struct {
-	ctx echo.Context
+	c echo.Context
 }
 
 var _ ports.VideosOutputPort = (*VideosPresenter)(nil)
 
-func NewVideosPresenter(ctx echo.Context) *VideosPresenter {
-	return &VideosPresenter{ctx}
+func NewVideosPresenter(c echo.Context) *VideosPresenter {
+	return &VideosPresenter{c}
 }
 
 func (p *VideosPresenter) OutputVideos(videos []*entities.Video) error {

@@ -16,65 +16,65 @@ func NewListsController(l *gateways.ListsRepository) *ListsController {
 	return &ListsController{l}
 }
 
-func (c *ListsController) interactor(ctx echo.Context) *interactors.ListsInteractor {
+func (lc *ListsController) interactor(c echo.Context) *interactors.ListsInteractor {
 	return interactors.NewListsInteractor(
-		presenters.NewListsPresenter(ctx),
-		presenters.NewChannelsPresenter(ctx),
-		presenters.NewVideosPresenter(ctx),
-		presenters.NewErrorsPresenter(ctx),
-		c.lists,
+		presenters.NewListsPresenter(c),
+		presenters.NewChannelsPresenter(c),
+		presenters.NewVideosPresenter(c),
+		presenters.NewErrorsPresenter(c),
+		lc.lists,
 	)
 }
 
-func (c *ListsController) Create() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+func (lc *ListsController) Create() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		var list entities.List
-		if err := ctx.Bind(&list); err != nil {
+		if err := c.Bind(&list); err != nil {
 			return err
 		}
 
-		return c.interactor(ctx).Create(&list)
+		return lc.interactor(c).Create(&list)
 	}
 }
 
-func (c *ListsController) GetAll() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		return c.interactor(ctx).GetAll()
+func (lc *ListsController) GetAll() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return lc.interactor(c).GetAll()
 	}
 }
 
-func (c *ListsController) GetById() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+func (lc *ListsController) GetById() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		return nil
 	}
 }
 
-func (c *ListsController) Update() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+func (lc *ListsController) Update() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		return nil
 	}
 }
 
-func (c *ListsController) DeleteById() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+func (lc *ListsController) DeleteById() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		return nil
 	}
 }
 
-func (c *ListsController) AddChannel() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+func (lc *ListsController) AddChannel() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) GetAllChannels() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+	return func(c echo.Context) error {
 		return nil
 	}
 }
 
 func (c *ListsController) GetFeed() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
+	return func(c echo.Context) error {
 		return nil
 	}
 }

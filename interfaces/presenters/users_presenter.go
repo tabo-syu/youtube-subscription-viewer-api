@@ -9,13 +9,13 @@ import (
 )
 
 type UsersPresenter struct {
-	ctx echo.Context
+	c echo.Context
 }
 
 var _ ports.UsersOutputPort = (*UsersPresenter)(nil)
 
-func NewUsersPresenter(ctx echo.Context) *UsersPresenter {
-	return &UsersPresenter{ctx}
+func NewUsersPresenter(c echo.Context) *UsersPresenter {
+	return &UsersPresenter{c}
 }
 
 func (p *UsersPresenter) OutputUsers(users []*entities.User) error {
@@ -23,5 +23,5 @@ func (p *UsersPresenter) OutputUsers(users []*entities.User) error {
 }
 
 func (p *UsersPresenter) OutputUser(user *entities.User) error {
-	return p.ctx.JSON(http.StatusOK, user)
+	return p.c.JSON(http.StatusOK, user)
 }

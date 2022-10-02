@@ -23,40 +23,40 @@ func NewYoutubeAuthsController(
 	return &YoutubeAuthsController{ur, ya, ycr}
 }
 
-func (c *YoutubeAuthsController) interactor(ctx echo.Context) *interactors.YoutubeAuthsInteractor {
+func (yc *YoutubeAuthsController) interactor(c echo.Context) *interactors.YoutubeAuthsInteractor {
 	return interactors.NewYoutubeAuthsInteractor(
-		presenters.NewYoutubeAuthsPresenter(ctx),
-		presenters.NewErrorsPresenter(ctx),
-		c.authorization,
-		c.users,
-		c.youtubeChannels,
+		presenters.NewYoutubeAuthsPresenter(c),
+		presenters.NewErrorsPresenter(c),
+		yc.authorization,
+		yc.users,
+		yc.youtubeChannels,
 	)
 }
 
-func (c *YoutubeAuthsController) Authorize(stateKey string) echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		return c.interactor(ctx).Authorize(
-			ctx.Get(stateKey).(string),
+func (yc *YoutubeAuthsController) Authorize(stateKey string) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return yc.interactor(c).Authorize(
+			c.Get(stateKey).(string),
 		)
 	}
 }
 
-func (c *YoutubeAuthsController) Login() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		code := ctx.QueryParam("code")
+func (yc *YoutubeAuthsController) Login() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		code := c.QueryParam("code")
 		if code == "" {
 			return echo.NewHTTPError(http.StatusBadRequest, "missing code token in the query string")
 		}
 
-		return c.interactor(ctx).Login(
-			ctx.Request().Context(),
+		return yc.interactor(c).Login(
+			c.Request().Context(),
 			code,
 		)
 	}
 }
 
-func (c *YoutubeAuthsController) Logout() echo.HandlerFunc {
-	return func(ctx echo.Context) error {
-		return c.interactor(ctx).Logout(ctx.Request().Context())
+func (yc *YoutubeAuthsController) Logout() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return yc.interactor(c).Logout(c.Request().Context())
 	}
 }
