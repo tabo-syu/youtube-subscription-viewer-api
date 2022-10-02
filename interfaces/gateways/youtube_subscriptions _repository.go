@@ -40,10 +40,12 @@ func (r *YoutubeSubscrptionsRepository) GetSubscriptions(ctx context.Context, cl
 		}
 
 		for _, subscription := range res.Items {
+			url := "https://www.youtube.com/channel/" + subscription.Snippet.ResourceId.ChannelId
 			channels = append(channels, &entities.Channel{
 				Id:        subscription.Snippet.ResourceId.ChannelId,
 				Name:      &subscription.Snippet.Title,
 				Thumbnail: &subscription.Snippet.Thumbnails.High.Url,
+				Url:       &url,
 			})
 		}
 

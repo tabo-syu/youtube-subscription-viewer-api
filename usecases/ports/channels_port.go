@@ -9,6 +9,7 @@ import (
 
 type ChannelsRepository interface {
 	GetFeed() ([]*entities.Video, error)
+	BulkSave([]*entities.Channel) error
 }
 
 type YoutubeChannelsRepository interface {

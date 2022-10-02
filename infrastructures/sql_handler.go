@@ -44,3 +44,7 @@ func (s *SqlHandler) Exec(query string, args ...any) (sql.Result, error) {
 func (s *SqlHandler) QueryRow(query string, args ...any) *sql.Row {
 	return s.db.QueryRow(query, args...)
 }
+
+func (s *SqlHandler) Begin() (*sql.Tx, error) {
+	return s.db.Begin()
+}

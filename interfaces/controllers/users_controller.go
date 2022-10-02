@@ -12,11 +12,12 @@ import (
 
 type UsersController struct {
 	users                *gateways.UsersRepository
+	channels             *gateways.ChannelsRepository
 	youtubeSubscriptions *gateways.YoutubeSubscrptionsRepository
 }
 
-func NewUsersController(ur *gateways.UsersRepository, ysr *gateways.YoutubeSubscrptionsRepository) *UsersController {
-	return &UsersController{ur, ysr}
+func NewUsersController(ur *gateways.UsersRepository, cr *gateways.ChannelsRepository, ysr *gateways.YoutubeSubscrptionsRepository) *UsersController {
+	return &UsersController{ur, cr, ysr}
 }
 
 func (uc *UsersController) interactor(c echo.Context) *interactors.UsersInteractor {
@@ -25,6 +26,7 @@ func (uc *UsersController) interactor(c echo.Context) *interactors.UsersInteract
 		presenters.NewChannelsPresenter(c),
 		presenters.NewErrorsPresenter(c),
 		uc.users,
+		uc.channels,
 		uc.youtubeSubscriptions,
 	)
 }

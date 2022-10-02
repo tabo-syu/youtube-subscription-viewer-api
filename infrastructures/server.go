@@ -41,7 +41,7 @@ func NewServer(db *SqlHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHan
 	return &Server{
 		Controllers{
 			controllers.NewYoutubeAuthsController(ur, ya, ycr),
-			controllers.NewUsersController(ur, ysr),
+			controllers.NewUsersController(ur, cr, ysr),
 			controllers.NewListsController(lr),
 			controllers.NewChannelsController(cr, ycr),
 		},

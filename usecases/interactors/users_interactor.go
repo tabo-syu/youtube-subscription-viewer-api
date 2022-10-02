@@ -13,6 +13,7 @@ type UsersInteractor struct {
 	channelsOutput                 ports.ChannelsOutputPort
 	errorsOutput                   ports.ErrorsOutputPort
 	usersRepository                ports.UsersRepository
+	channelsRepository             ports.ChannelsRepository
 	youtubeSubscriptionsRepository ports.YoutubeSubscriptionsRepository
 }
 
@@ -23,9 +24,10 @@ func NewUsersInteractor(
 	co ports.ChannelsOutputPort,
 	eo ports.ErrorsOutputPort,
 	ur ports.UsersRepository,
+	cr ports.ChannelsRepository,
 	ysr ports.YoutubeSubscriptionsRepository,
 ) *UsersInteractor {
-	return &UsersInteractor{uo, co, eo, ur, ysr}
+	return &UsersInteractor{uo, co, eo, ur, cr, ysr}
 }
 
 func (i *UsersInteractor) GetMyself(user *entities.User) error {
@@ -36,6 +38,9 @@ func (i *UsersInteractor) GetMySubscriptions(ctx context.Context, client *http.C
 	channels, err := i.youtubeSubscriptionsRepository.GetSubscriptions(ctx, client)
 	if err != nil {
 		return nil
+	}
+	if err := i.channelsRepository.BulkSave(channels); err != nil {
+		return err
 	}
 
 	return i.channelsOutput.OutputChannels(channels)
