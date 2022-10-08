@@ -8,9 +8,7 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
-type YoutubeHandler struct {
-	youtube *youtube.Service
-}
+type YoutubeHandler struct{}
 
 func NewYoutubeHandler() *YoutubeHandler {
 	return &YoutubeHandler{}

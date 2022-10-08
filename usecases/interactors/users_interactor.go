@@ -44,7 +44,7 @@ func (i *UsersInteractor) GetMyself(user *entities.User) error {
 func (i *UsersInteractor) GetMySubscriptions(ctx context.Context, client *http.Client) error {
 	channels, err := i.youtubeSubscriptionsRepository.GetSubscriptions(ctx, client)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	if err := i.channelsRepository.BulkSave(channels); err != nil {

@@ -28,8 +28,8 @@ func (yc *YoutubeAuthsController) interactor(echoCtx echo.Context) *interactors.
 		presenters.NewYoutubeAuthsPresenter(echoCtx),
 		presenters.NewErrorsPresenter(echoCtx),
 		yc.authorization,
-		yc.users,
 		yc.youtubeChannels,
+		yc.users,
 	)
 }
 
