@@ -20,14 +20,21 @@ type UsersInteractor struct {
 var _ ports.UsersInputPort = (*UsersInteractor)(nil)
 
 func NewUsersInteractor(
-	uo ports.UsersOutputPort,
-	co ports.ChannelsOutputPort,
-	eo ports.ErrorsOutputPort,
-	ur ports.UsersRepository,
-	cr ports.ChannelsRepository,
-	ysr ports.YoutubeSubscriptionsRepository,
+	usersOutput ports.UsersOutputPort,
+	channelsOutput ports.ChannelsOutputPort,
+	errorsOutput ports.ErrorsOutputPort,
+	usersRepository ports.UsersRepository,
+	channelsRepository ports.ChannelsRepository,
+	youtubeSubscriptionsRepository ports.YoutubeSubscriptionsRepository,
 ) *UsersInteractor {
-	return &UsersInteractor{uo, co, eo, ur, cr, ysr}
+	return &UsersInteractor{
+		usersOutput,
+		channelsOutput,
+		errorsOutput,
+		usersRepository,
+		channelsRepository,
+		youtubeSubscriptionsRepository,
+	}
 }
 
 func (i *UsersInteractor) GetMyself(user *entities.User) error {

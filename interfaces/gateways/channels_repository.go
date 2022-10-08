@@ -21,13 +21,13 @@ func (r *ChannelsRepository) GetFeed() ([]*entities.Video, error) {
 }
 
 func (r *ChannelsRepository) BulkSave(channels []*entities.Channel) error {
-	tx, err := r.sql.Begin()
+	transaction, err := r.sql.Begin()
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer transaction.Rollback()
 
-	stmt, err := tx.Prepare(`
+	stmt, err := transaction.Prepare(`
 		INSERT INTO channels (id, name, thumbnail, url) VALUES ($1, $2, $3, $4)
 		ON CONFLICT (id)
 		DO UPDATE SET name = $2, thumbnail = $3, url = $4
@@ -44,6 +44,7 @@ func (r *ChannelsRepository) BulkSave(channels []*entities.Channel) error {
 		}
 	}
 	if err := tx.Commit(); err != nil {
+	if err := transaction.Commit(); err != nil {
 		return err
 	}
 

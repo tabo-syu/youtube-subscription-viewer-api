@@ -16,13 +16,13 @@ type ListsInteractor struct {
 var _ ports.ListsInputPort = (*ListsInteractor)(nil)
 
 func NewListsInteractor(
-	lo ports.ListsOutputPort,
-	co ports.ChannelsOutputPort,
-	vo ports.VideosOutputPort,
-	eo ports.ErrorsOutputPort,
-	lr ports.ListsRepository,
+	listsOutput ports.ListsOutputPort,
+	channelsOutput ports.ChannelsOutputPort,
+	videosOutput ports.VideosOutputPort,
+	errorsOutput ports.ErrorsOutputPort,
+	listsRepository ports.ListsRepository,
 ) *ListsInteractor {
-	return &ListsInteractor{lo, co, vo, eo, lr}
+	return &ListsInteractor{listsOutput, channelsOutput, videosOutput, errorsOutput, listsRepository}
 }
 
 func (i *ListsInteractor) Create(list *entities.List) error {

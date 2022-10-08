@@ -15,13 +15,13 @@ type ChannelsInteractor struct {
 var _ ports.ChannelsInputPort = (*ChannelsInteractor)(nil)
 
 func NewChannelsInteractor(
-	lo ports.ListsOutputPort,
-	co ports.ChannelsOutputPort,
-	vo ports.VideosOutputPort,
-	eo ports.ErrorsOutputPort,
-	cr ports.ChannelsRepository,
+	listsOutput ports.ListsOutputPort,
+	channelsOutput ports.ChannelsOutputPort,
+	videosOutput ports.VideosOutputPort,
+	errorsOutput ports.ErrorsOutputPort,
+	channelsRepository ports.ChannelsRepository,
 ) *ChannelsInteractor {
-	return &ChannelsInteractor{lo, co, vo, eo, cr}
+	return &ChannelsInteractor{listsOutput, channelsOutput, videosOutput, errorsOutput, channelsRepository}
 }
 
 func (i *ChannelsInteractor) GetFeed() error {

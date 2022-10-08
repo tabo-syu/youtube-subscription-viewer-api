@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	// PostgreSQL のドライバーをインポート。
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
@@ -22,15 +23,16 @@ func NewSQLHandler(config *DB) (*SQLHandler, error) {
 		config.TimeZone,
 	)
 	db, err := sql.Open("pgx", dsn)
+	postgres, err := sql.Open("pgx", dsn)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := db.Ping(); err != nil {
+	if err := postgres.Ping(); err != nil {
 		return nil, err
 	}
 
-	return &SQLHandler{db}, nil
+	return &SQLHandler{postgres}, nil
 }
 
 func (s *SQLHandler) Close() error {

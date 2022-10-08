@@ -17,13 +17,19 @@ type YoutubeAuthsInteractor struct {
 var _ ports.YoutubeAuthsInputPort = (*YoutubeAuthsInteractor)(nil)
 
 func NewYoutubeAuthsInteractor(
-	ao ports.YoutubeAuthsOutputPort,
-	eo ports.ErrorsOutputPort,
-	ya ports.YoutubeAuthorization,
-	ur ports.UsersRepository,
-	yr ports.YoutubeChannelsRepository,
+	youtubeAuthsOutput ports.YoutubeAuthsOutputPort,
+	errorsOutput ports.ErrorsOutputPort,
+	youtubeAuthorization ports.YoutubeAuthorization,
+	youtubeChannelsRepository ports.YoutubeChannelsRepository,
+	usersRepository ports.UsersRepository,
 ) *YoutubeAuthsInteractor {
-	return &YoutubeAuthsInteractor{ao, eo, ya, yr, ur}
+	return &YoutubeAuthsInteractor{
+		youtubeAuthsOutput,
+		errorsOutput,
+		youtubeAuthorization,
+		youtubeChannelsRepository,
+		usersRepository,
+	}
 }
 
 func (i *YoutubeAuthsInteractor) Authorize(state string) error {

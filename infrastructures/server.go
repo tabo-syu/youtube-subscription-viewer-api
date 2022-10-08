@@ -30,24 +30,24 @@ type Server struct {
 	Middlewares
 }
 
-func NewServer(db *SQLHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHandler) (*Server, error) {
-	ur := gateways.NewUsersRepository(db)
-	ya := gateways.NewYoutubeAuthorization(oauth2)
-	ycr := gateways.NewYoutubeChannelsRepository(youtube)
-	ysr := gateways.NewYoutubeSubscriptionsRepository(youtube)
-	cr := gateways.NewChannelsRepository(db)
-	lr := gateways.NewListsRepository(db)
+func NewServer(sql *SQLHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHandler) (*Server, error) {
+	usersRepository := gateways.NewUsersRepository(sql)
+	youtubeAuthorization := gateways.NewYoutubeAuthorization(oauth2)
+	youtubeChannelsRepository := gateways.NewYoutubeChannelsRepository(youtube)
+	youtubeSubscriptionsRepository := gateways.NewYoutubeSubscriptionsRepository(youtube)
+	channelsRepository := gateways.NewChannelsRepository(sql)
+	listsRepository := gateways.NewListsRepository(sql)
 
 	return &Server{
 		Controllers{
-			controllers.NewYoutubeAuthsController(ur, ya, ycr),
-			controllers.NewUsersController(ur, cr, ysr),
-			controllers.NewListsController(lr),
-			controllers.NewChannelsController(cr, ycr),
+			controllers.NewYoutubeAuthsController(usersRepository, youtubeAuthorization, youtubeChannelsRepository),
+			controllers.NewUsersController(usersRepository, channelsRepository, youtubeSubscriptionsRepository),
+			controllers.NewListsController(listsRepository),
+			controllers.NewChannelsController(channelsRepository, youtubeChannelsRepository),
 		},
 		Middlewares{
 			middlewares.OAuthStateChecker(middlewares.DefaultCheckerConfig),
-			middlewares.Authenticator(ur, ya, middlewares.DefaultAuthenticatorConfig),
+			middlewares.Authenticator(usersRepository, youtubeAuthorization, middlewares.DefaultAuthenticatorConfig),
 		},
 	}, nil
 }
