@@ -52,7 +52,11 @@ func (s *userTokenSource) Token() (*oauth2.Token, error) {
 
 type AuthenticatorFunc = echo.MiddlewareFunc
 
-func Authenticator(users *gateways.UsersRepository, auth *gateways.YoutubeAuthorization, config AuthenticatorConfig) AuthenticatorFunc {
+func Authenticator(
+	users *gateways.UsersRepository,
+	auth *gateways.YoutubeAuthorization,
+	config AuthenticatorConfig,
+) AuthenticatorFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			ctx := c.Request().Context()

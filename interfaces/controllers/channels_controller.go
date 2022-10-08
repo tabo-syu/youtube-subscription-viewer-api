@@ -12,7 +12,10 @@ type ChannelsController struct {
 	youtubeChannels *gateways.YoutubeChannelsRepository
 }
 
-func NewChannelsController(cr *gateways.ChannelsRepository, ycr *gateways.YoutubeChannelsRepository) *ChannelsController {
+func NewChannelsController(
+	cr *gateways.ChannelsRepository,
+	ycr *gateways.YoutubeChannelsRepository,
+) *ChannelsController {
 	return &ChannelsController{cr, ycr}
 }
 

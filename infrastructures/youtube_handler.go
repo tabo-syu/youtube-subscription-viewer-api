@@ -16,7 +16,11 @@ func NewYoutubeHandler() *YoutubeHandler {
 	return &YoutubeHandler{}
 }
 
-func (h *YoutubeHandler) ListChannels(ctx context.Context, client *http.Client, part []string) (*youtube.ChannelsListCall, error) {
+func (h *YoutubeHandler) ListChannels(
+	ctx context.Context,
+	client *http.Client,
+	part []string,
+) (*youtube.ChannelsListCall, error) {
 	service, err := youtube.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
 		return nil, err
@@ -25,7 +29,11 @@ func (h *YoutubeHandler) ListChannels(ctx context.Context, client *http.Client, 
 	return service.Channels.List(part), nil
 }
 
-func (h *YoutubeHandler) ListSubscriptions(ctx context.Context, client *http.Client, part []string) (*youtube.SubscriptionsListCall, error) {
+func (h *YoutubeHandler) ListSubscriptions(
+	ctx context.Context,
+	client *http.Client,
+	part []string,
+) (*youtube.SubscriptionsListCall, error) {
 	service, err := youtube.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
 		return nil, err

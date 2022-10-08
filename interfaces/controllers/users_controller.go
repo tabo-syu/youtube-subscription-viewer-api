@@ -16,7 +16,11 @@ type UsersController struct {
 	youtubeSubscriptions *gateways.YoutubeSubscrptionsRepository
 }
 
-func NewUsersController(ur *gateways.UsersRepository, cr *gateways.ChannelsRepository, ysr *gateways.YoutubeSubscrptionsRepository) *UsersController {
+func NewUsersController(
+	ur *gateways.UsersRepository,
+	cr *gateways.ChannelsRepository,
+	ysr *gateways.YoutubeSubscrptionsRepository,
+) *UsersController {
 	return &UsersController{ur, cr, ysr}
 }
 

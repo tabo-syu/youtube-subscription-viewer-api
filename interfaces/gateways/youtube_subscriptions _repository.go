@@ -19,7 +19,10 @@ func NewYoutubeSubscriptionsRepository(y interfaces.YoutubeHandler) *YoutubeSubs
 	return &YoutubeSubscrptionsRepository{y}
 }
 
-func (r *YoutubeSubscrptionsRepository) GetSubscriptions(ctx context.Context, client *http.Client) ([]*entities.Channel, error) {
+func (r *YoutubeSubscrptionsRepository) GetSubscriptions(
+	ctx context.Context,
+	client *http.Client,
+) ([]*entities.Channel, error) {
 	subscriptions, err := r.youtube.ListSubscriptions(ctx, client, []string{"id", "snippet"})
 	if err != nil {
 		return nil, err
