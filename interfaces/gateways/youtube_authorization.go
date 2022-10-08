@@ -16,8 +16,8 @@ func NewYoutubeAuthorization(o interfaces.YoutubeOAuth2Handler) *YoutubeAuthoriz
 	return &YoutubeAuthorization{o}
 }
 
-func (a *YoutubeAuthorization) AuthCodeUrl(state string) string {
-	return a.oAuth2.AuthCodeUrl(state)
+func (a *YoutubeAuthorization) AuthCodeURL(state string) string {
+	return a.oAuth2.AuthCodeURL(state)
 }
 
 func (a *YoutubeAuthorization) Exchange(ctx context.Context, code string) (*oauth2.Token, error) {

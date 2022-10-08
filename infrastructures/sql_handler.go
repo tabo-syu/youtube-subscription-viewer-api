@@ -7,11 +7,11 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-type SqlHandler struct {
+type SQLHandler struct {
 	db *sql.DB
 }
 
-func NewSqlHandler(config *DB) (*SqlHandler, error) {
+func NewSQLHandler(config *DB) (*SQLHandler, error) {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable Timezone=%s",
 		config.Host,
@@ -30,21 +30,21 @@ func NewSqlHandler(config *DB) (*SqlHandler, error) {
 		return nil, err
 	}
 
-	return &SqlHandler{db}, nil
+	return &SQLHandler{db}, nil
 }
 
-func (s *SqlHandler) Close() error {
+func (s *SQLHandler) Close() error {
 	return s.db.Close()
 }
 
-func (s *SqlHandler) Exec(query string, args ...any) (sql.Result, error) {
+func (s *SQLHandler) Exec(query string, args ...any) (sql.Result, error) {
 	return s.db.Exec(query, args...)
 }
 
-func (s *SqlHandler) QueryRow(query string, args ...any) *sql.Row {
+func (s *SQLHandler) QueryRow(query string, args ...any) *sql.Row {
 	return s.db.QueryRow(query, args...)
 }
 
-func (s *SqlHandler) Begin() (*sql.Tx, error) {
+func (s *SQLHandler) Begin() (*sql.Tx, error) {
 	return s.db.Begin()
 }

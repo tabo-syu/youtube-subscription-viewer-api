@@ -7,9 +7,9 @@ import (
 type ListsRepository interface {
 	Create(*entities.List) (*entities.List, error)
 	GetAll() ([]*entities.List, error)
-	GetById(entities.ListId) (*entities.List, error)
+	GetByID(entities.ListId) (*entities.List, error)
 	Update(*entities.List) (*entities.List, error)
-	DeleteById(entities.ListId) error
+	DeleteByID(entities.ListId) error
 	AddChannel(*entities.Channel) (*entities.Channel, error)
 	GetAllChannels() ([]*entities.Channel, error)
 	GetFeed() ([]*entities.Video, error)
@@ -18,9 +18,9 @@ type ListsRepository interface {
 type ListsInputPort interface {
 	Create(*entities.List) error
 	GetAll() error
-	GetById(entities.ListId) error
+	GetByID(entities.ListId) error
 	Update(*entities.List) error
-	DeleteById(entities.ListId) error
+	DeleteByID(entities.ListId) error
 }
 
 type ListsOutputPort interface {

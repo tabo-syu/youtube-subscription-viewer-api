@@ -9,7 +9,7 @@ import (
 )
 
 type YoutubeAuthorization interface {
-	AuthCodeUrl(string) string
+	AuthCodeURL(string) string
 	Exchange(context.Context, string) (*oauth2.Token, error)
 	Client(context.Context, *oauth2.Token) *http.Client
 	TokenSource(context.Context, *oauth2.Token) oauth2.TokenSource
@@ -20,6 +20,6 @@ type YoutubeAuthsInputPort interface {
 }
 
 type YoutubeAuthsOutputPort interface {
-	OutputRedirectUrl(string) error
+	OutputRedirectURL(string) error
 	Login(*entities.User) error
 }

@@ -20,7 +20,7 @@ func NewYoutubeAuthsPresenter(c echo.Context) *YoutubeAuthsPresenter {
 	return &YoutubeAuthsPresenter{c}
 }
 
-func (p *YoutubeAuthsPresenter) OutputRedirectUrl(url string) error {
+func (p *YoutubeAuthsPresenter) OutputRedirectURL(url string) error {
 	return p.c.Redirect(http.StatusSeeOther, url)
 }
 

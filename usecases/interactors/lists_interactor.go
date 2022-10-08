@@ -43,8 +43,8 @@ func (i *ListsInteractor) GetAll() error {
 	return i.listsOutput.OutputLists(lists)
 }
 
-func (i *ListsInteractor) GetById(id entities.ListId) error {
-	list, err := i.listsRepository.GetById(id)
+func (i *ListsInteractor) GetByID(id entities.ListId) error {
+	list, err := i.listsRepository.GetByID(id)
 	if err != nil {
 		return i.errorsOutput.OutputError()
 	}
@@ -61,8 +61,8 @@ func (i *ListsInteractor) Update(list *entities.List) error {
 	return i.listsOutput.OutputList(list)
 }
 
-func (i *ListsInteractor) DeleteById(id entities.ListId) error {
-	err := i.listsRepository.DeleteById(id)
+func (i *ListsInteractor) DeleteByID(id entities.ListId) error {
+	err := i.listsRepository.DeleteByID(id)
 	if err != nil {
 		return i.errorsOutput.OutputError()
 	}

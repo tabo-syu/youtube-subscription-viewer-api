@@ -7,12 +7,12 @@ import (
 )
 
 type ChannelsRepository struct {
-	sql interfaces.SqlHandler
+	sql interfaces.SQLHandler
 }
 
 var _ ports.ChannelsRepository = (*ChannelsRepository)(nil)
 
-func NewChannelsRepository(s interfaces.SqlHandler) *ChannelsRepository {
+func NewChannelsRepository(s interfaces.SQLHandler) *ChannelsRepository {
 	return &ChannelsRepository{s}
 }
 

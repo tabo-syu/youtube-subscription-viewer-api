@@ -4,7 +4,7 @@ import (
 	"github.com/tabo-syu/youtube-subscription-viewer-api/infrastructures"
 )
 
-func Migrate(sql *infrastructures.SqlHandler) error {
+func Migrate(sql *infrastructures.SQLHandler) error {
 	_, err := sql.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id            varchar(24)                            PRIMARY KEY,

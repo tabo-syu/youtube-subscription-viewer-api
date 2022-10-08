@@ -7,12 +7,12 @@ import (
 )
 
 type ListsRepository struct {
-	sql interfaces.SqlHandler
+	sql interfaces.SQLHandler
 }
 
 var _ ports.ListsRepository = (*ListsRepository)(nil)
 
-func NewListsRepository(s interfaces.SqlHandler) *ListsRepository {
+func NewListsRepository(s interfaces.SQLHandler) *ListsRepository {
 	return &ListsRepository{s}
 }
 
@@ -24,7 +24,7 @@ func (r *ListsRepository) GetAll() ([]*entities.List, error) {
 	return []*entities.List{}, nil
 }
 
-func (r *ListsRepository) GetById(id entities.ListId) (*entities.List, error) {
+func (r *ListsRepository) GetByID(id entities.ListId) (*entities.List, error) {
 	return &entities.List{}, nil
 }
 
@@ -32,7 +32,7 @@ func (r *ListsRepository) Update(list *entities.List) (*entities.List, error) {
 	return &entities.List{}, nil
 }
 
-func (r *ListsRepository) DeleteById(id entities.ListId) error {
+func (r *ListsRepository) DeleteByID(id entities.ListId) error {
 	return nil
 }
 

@@ -22,7 +22,7 @@ func NewYoutubeOAuth2Handler(clientSecret []byte) (*YoutubeOAuth2Handler, error)
 	return &YoutubeOAuth2Handler{config}, nil
 }
 
-func (h *YoutubeOAuth2Handler) AuthCodeUrl(state string) string {
+func (h *YoutubeOAuth2Handler) AuthCodeURL(state string) string {
 	return h.config.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 }
 

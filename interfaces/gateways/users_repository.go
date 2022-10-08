@@ -11,12 +11,12 @@ import (
 )
 
 type UsersRepository struct {
-	sql interfaces.SqlHandler
+	sql interfaces.SQLHandler
 }
 
 var _ ports.UsersRepository = (*UsersRepository)(nil)
 
-func NewUsersRepository(s interfaces.SqlHandler) *UsersRepository {
+func NewUsersRepository(s interfaces.SQLHandler) *UsersRepository {
 	return &UsersRepository{s}
 }
 
@@ -53,16 +53,16 @@ func (r *UsersRepository) Get(id string) (*entities.User, *oauth2.Token, error) 
 	return &user, &token, nil
 }
 
-func (r *UsersRepository) UpdateToken(userId string, token *oauth2.Token) error {
+func (r *UsersRepository) UpdateToken(userID string, token *oauth2.Token) error {
 	_, err := r.sql.Exec(
 		`UPDATE users SET access_token = $2, refresh_token = $3, expiry = $4, updated_at = $5 WHERE id = $1`,
-		userId, token.AccessToken, token.RefreshToken, token.Expiry, time.Now(),
+		userID, token.AccessToken, token.RefreshToken, token.Expiry, time.Now(),
 	)
 	if err != nil {
 		return err
 	}
 
-	log.Println("token is updated", "user_id:", userId)
+	log.Println("token is updated", "user_id:", userID)
 
 	return nil
 }

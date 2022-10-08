@@ -32,11 +32,11 @@ var (
 type userTokenSource struct {
 	src    oauth2.TokenSource
 	users  *gateways.UsersRepository
-	userId string
+	userID string
 }
 
-func newUserTokenSouce(src oauth2.TokenSource, users *gateways.UsersRepository, userId string) *userTokenSource {
-	return &userTokenSource{src, users, userId}
+func newUserTokenSouce(src oauth2.TokenSource, users *gateways.UsersRepository, userID string) *userTokenSource {
+	return &userTokenSource{src, users, userID}
 }
 
 // リフレッシュトークンを使い、アクセストークンを更新する。
@@ -47,7 +47,7 @@ func (s *userTokenSource) Token() (*oauth2.Token, error) {
 		return nil, err
 	}
 
-	return token, s.users.UpdateToken(s.userId, token)
+	return token, s.users.UpdateToken(s.userID, token)
 }
 
 type AuthenticatorFunc = echo.MiddlewareFunc
@@ -63,18 +63,18 @@ func Authenticator(
 
 			sess, _ := session.Get(config.CookieName, c)
 			sess.Options = config.Session
-			userId, ok := sess.Values["user_id"]
+			userID, ok := sess.Values["user_id"]
 			if !ok {
 				return ErrUnauthorized
 			}
-			user, token, err := users.Get(userId.(string))
+			user, token, err := users.Get(userID.(string))
 			if err != nil {
 				return ErrUnauthorized
 			}
 
 			// トークンの更新処理
 			tokenSouce := auth.TokenSource(ctx, token)
-			userTokenSouce := newUserTokenSouce(tokenSouce, users, userId.(string))
+			userTokenSouce := newUserTokenSouce(tokenSouce, users, userID.(string))
 			client := oauth2.NewClient(ctx, oauth2.ReuseTokenSource(token, userTokenSouce))
 
 			c.Set("user", user)

@@ -27,9 +27,9 @@ func NewYoutubeAuthsInteractor(
 }
 
 func (i *YoutubeAuthsInteractor) Authorize(state string) error {
-	url := i.youtubeAuthorization.AuthCodeUrl(state)
+	url := i.youtubeAuthorization.AuthCodeURL(state)
 
-	return i.youtubeAuthsOutputPort.OutputRedirectUrl(url)
+	return i.youtubeAuthsOutputPort.OutputRedirectURL(url)
 }
 
 func (i *YoutubeAuthsInteractor) Login(ctx context.Context, code string) error {

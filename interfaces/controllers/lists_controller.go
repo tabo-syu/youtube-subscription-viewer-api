@@ -43,7 +43,7 @@ func (lc *ListsController) GetAll() echo.HandlerFunc {
 	}
 }
 
-func (lc *ListsController) GetById() echo.HandlerFunc {
+func (lc *ListsController) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return nil
 	}
@@ -55,7 +55,7 @@ func (lc *ListsController) Update() echo.HandlerFunc {
 	}
 }
 
-func (lc *ListsController) DeleteById() echo.HandlerFunc {
+func (lc *ListsController) DeleteByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return nil
 	}

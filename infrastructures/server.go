@@ -30,7 +30,7 @@ type Server struct {
 	Middlewares
 }
 
-func NewServer(db *SqlHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHandler) (*Server, error) {
+func NewServer(db *SQLHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHandler) (*Server, error) {
 	ur := gateways.NewUsersRepository(db)
 	ya := gateways.NewYoutubeAuthorization(oauth2)
 	ycr := gateways.NewYoutubeChannelsRepository(youtube)
@@ -79,9 +79,9 @@ func (s *Server) Start(port string) {
 		lists.POST("", s.Controllers.Lists.Create())
 		lists.GET("", s.Controllers.Lists.GetAll())
 
-		lists.GET("/:id", s.Controllers.Lists.GetById())
+		lists.GET("/:id", s.Controllers.Lists.GetByID())
 		lists.PATCH("/:id", s.Controllers.Lists.Update())
-		lists.DELETE("/:id", s.Controllers.Lists.DeleteById())
+		lists.DELETE("/:id", s.Controllers.Lists.DeleteByID())
 
 		lists.POST("/:id/channels", s.Controllers.Lists.AddChannel())
 		lists.GET("/:id/channels", s.Controllers.Lists.GetAllChannels())

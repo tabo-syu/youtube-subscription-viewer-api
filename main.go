@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	sql     *infrastructures.SqlHandler
+	sql     *infrastructures.SQLHandler
 	oAuth   *infrastructures.YoutubeOAuth2Handler
 	youtube *infrastructures.YoutubeHandler
 	err     error
@@ -20,7 +20,7 @@ func init() {
 		log.Fatalf("Cannot read client_secret.json")
 	}
 
-	sql, err = infrastructures.NewSqlHandler(&config.DB)
+	sql, err = infrastructures.NewSQLHandler(&config.DB)
 	if err != nil {
 		log.Fatalf("Cannot connect DB")
 	}
