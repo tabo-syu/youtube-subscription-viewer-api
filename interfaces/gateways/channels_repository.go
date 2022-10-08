@@ -43,7 +43,7 @@ func (r *ChannelsRepository) BulkSave(channels []*entities.Channel) error {
 			return err
 		}
 	}
-	if err := tx.Commit(); err != nil {
+
 	if err := transaction.Commit(); err != nil {
 		return err
 	}

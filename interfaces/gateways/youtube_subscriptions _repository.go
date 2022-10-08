@@ -33,17 +33,21 @@ func (r *YoutubeSubscrptionsRepository) GetSubscriptions(
 		nextPageToken string
 		loopErr       error
 	)
+
 	for {
 		subscriptionsCall := subscriptions.Mine(true).Order("alphabetical").
 			MaxResults(50).PageToken(nextPageToken)
+
 		res, err := subscriptionsCall.Do()
 		if err != nil {
 			loopErr = err
+
 			break
 		}
 
 		for _, subscription := range res.Items {
 			url := "https://www.youtube.com/channel/" + subscription.Snippet.ResourceId.ChannelId
+
 			channels = append(channels, &entities.Channel{
 				Id:        subscription.Snippet.ResourceId.ChannelId,
 				Name:      &subscription.Snippet.Title,
@@ -57,6 +61,7 @@ func (r *YoutubeSubscrptionsRepository) GetSubscriptions(
 			break
 		}
 	}
+
 	if loopErr != nil {
 		return nil, loopErr
 	}

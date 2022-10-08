@@ -63,10 +63,12 @@ func Authenticator(
 
 			sess, _ := session.Get(config.CookieName, echoCtx)
 			sess.Options = config.Session
+
 			userID, ok := sess.Values["user_id"]
 			if !ok {
 				return ErrUnauthorized
 			}
+
 			user, token, err := users.Get(userID.(string))
 			if err != nil {
 				return ErrUnauthorized

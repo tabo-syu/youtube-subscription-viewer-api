@@ -24,6 +24,7 @@ func init() {
 	if err != nil {
 		log.Fatalf("Cannot connect DB")
 	}
+
 	if err := migration.Migrate(sql); err != nil {
 		log.Fatalf("Cannot migrate cause:\n%s", err)
 	}

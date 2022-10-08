@@ -30,7 +30,7 @@ func (r *UsersRepository) RegisterUser(user *entities.User, token *oauth2.Token)
 		return err
 	}
 
-	log.Println("user is registerd", "user_id:", user.Id)
+	log.Println("user is registered", "user_id:", user.Id)
 
 	return nil
 }
@@ -42,6 +42,7 @@ func (r *UsersRepository) Get(userID string) (*entities.User, *oauth2.Token, err
 			TokenType: "bearer",
 		}
 	)
+
 	err := r.sql.QueryRow(`
 		SELECT id, name, thumbnail, access_token, refresh_token, expiry FROM users WHERE id = $1`,
 		userID,

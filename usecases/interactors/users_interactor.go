@@ -46,6 +46,7 @@ func (i *UsersInteractor) GetMySubscriptions(ctx context.Context, client *http.C
 	if err != nil {
 		return nil
 	}
+
 	if err := i.channelsRepository.BulkSave(channels); err != nil {
 		return err
 	}

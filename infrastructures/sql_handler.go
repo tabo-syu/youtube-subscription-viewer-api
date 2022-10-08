@@ -22,7 +22,7 @@ func NewSQLHandler(config *DB) (*SQLHandler, error) {
 		config.Port,
 		config.TimeZone,
 	)
-	db, err := sql.Open("pgx", dsn)
+
 	postgres, err := sql.Open("pgx", dsn)
 	if err != nil {
 		return nil, err
