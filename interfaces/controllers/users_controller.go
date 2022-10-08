@@ -24,11 +24,11 @@ func NewUsersController(
 	return &UsersController{ur, cr, ysr}
 }
 
-func (uc *UsersController) interactor(c echo.Context) *interactors.UsersInteractor {
+func (uc *UsersController) interactor(echoCtx echo.Context) *interactors.UsersInteractor {
 	return interactors.NewUsersInteractor(
-		presenters.NewUsersPresenter(c),
-		presenters.NewChannelsPresenter(c),
-		presenters.NewErrorsPresenter(c),
+		presenters.NewUsersPresenter(echoCtx),
+		presenters.NewChannelsPresenter(echoCtx),
+		presenters.NewErrorsPresenter(echoCtx),
 		uc.users,
 		uc.channels,
 		uc.youtubeSubscriptions,
@@ -36,25 +36,25 @@ func (uc *UsersController) interactor(c echo.Context) *interactors.UsersInteract
 }
 
 func (uc *UsersController) GetMyself() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		user, ok := c.Get("user").(*entities.User)
+	return func(echoCtx echo.Context) error {
+		user, ok := echoCtx.Get("user").(*entities.User)
 		if !ok {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		return uc.interactor(c).GetMyself(user)
+		return uc.interactor(echoCtx).GetMyself(user)
 	}
 }
 
 func (uc *UsersController) GetMySubscriptions() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		client, ok := c.Get("client").(*http.Client)
+	return func(echoCtx echo.Context) error {
+		client, ok := echoCtx.Get("client").(*http.Client)
 		if !ok {
 			return echo.NewHTTPError(http.StatusInternalServerError)
 		}
 
-		return uc.interactor(c).GetMySubscriptions(
-			c.Request().Context(),
+		return uc.interactor(echoCtx).GetMySubscriptions(
+			echoCtx.Request().Context(),
 			client,
 		)
 	}

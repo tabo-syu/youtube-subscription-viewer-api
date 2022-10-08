@@ -9,17 +9,17 @@ import (
 )
 
 type ChannelsPresenter struct {
-	c echo.Context
+	echoCtx echo.Context
 }
 
 var _ ports.ChannelsOutputPort = (*ChannelsPresenter)(nil)
 
-func NewChannelsPresenter(c echo.Context) *ChannelsPresenter {
-	return &ChannelsPresenter{c}
+func NewChannelsPresenter(echoCtx echo.Context) *ChannelsPresenter {
+	return &ChannelsPresenter{echoCtx}
 }
 
 func (p *ChannelsPresenter) OutputChannels(channels []*entities.Channel) error {
-	return p.c.JSON(http.StatusOK, channels)
+	return p.echoCtx.JSON(http.StatusOK, channels)
 }
 
 func (p *ChannelsPresenter) OutputChannel(channel *entities.Channel) error {

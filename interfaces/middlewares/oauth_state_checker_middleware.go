@@ -28,22 +28,22 @@ type OAuthStateCheckerFunc = echo.MiddlewareFunc
 
 func OAuthStateChecker(config CheckerConfig) OAuthStateCheckerFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			if c.QueryParam(config.CodeQuery) != "" {
-				if !validateState(c, config, c.QueryParam(config.StateQuery)) {
+		return func(echoCtx echo.Context) error {
+			if echoCtx.QueryParam(config.CodeQuery) != "" {
+				if !validateState(echoCtx, config, echoCtx.QueryParam(config.StateQuery)) {
 					return ErrStateInvalid
 				}
 			} else {
-				setCookie(c, config)
+				setCookie(echoCtx, config)
 			}
 
-			return next(c)
+			return next(echoCtx)
 		}
 	}
 }
 
-func validateState(c echo.Context, config CheckerConfig, state string) bool {
-	cookie, err := c.Cookie(config.CookieName)
+func validateState(echoCtx echo.Context, config CheckerConfig, state string) bool {
+	cookie, err := echoCtx.Cookie(config.CookieName)
 	// このエラーはクッキーが見つからないときに返却されるので、
 	// 検証失敗として false を返す
 	if err != nil {
@@ -53,7 +53,7 @@ func validateState(c echo.Context, config CheckerConfig, state string) bool {
 	return cookie.Value == state
 }
 
-func setCookie(c echo.Context, config CheckerConfig) {
+func setCookie(echoCtx echo.Context, config CheckerConfig) {
 	state := random.String(32)
 
 	cookie := new(http.Cookie)
@@ -62,6 +62,6 @@ func setCookie(c echo.Context, config CheckerConfig) {
 	cookie.SameSite = http.SameSiteLaxMode
 	cookie.HttpOnly = true
 
-	c.SetCookie(cookie)
-	c.Set(config.StateKey, state)
+	echoCtx.SetCookie(cookie)
+	echoCtx.Set(config.StateKey, state)
 }

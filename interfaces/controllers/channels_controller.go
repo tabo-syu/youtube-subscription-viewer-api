@@ -19,18 +19,18 @@ func NewChannelsController(
 	return &ChannelsController{cr, ycr}
 }
 
-func (cc *ChannelsController) interactor(c echo.Context) *interactors.ChannelsInteractor {
+func (cc *ChannelsController) interactor(echoCtx echo.Context) *interactors.ChannelsInteractor {
 	return interactors.NewChannelsInteractor(
-		presenters.NewListsPresenter(c),
-		presenters.NewChannelsPresenter(c),
-		presenters.NewVideosPresenter(c),
-		presenters.NewErrorsPresenter(c),
+		presenters.NewListsPresenter(echoCtx),
+		presenters.NewChannelsPresenter(echoCtx),
+		presenters.NewVideosPresenter(echoCtx),
+		presenters.NewErrorsPresenter(echoCtx),
 		cc.channels,
 	)
 }
 
 func (cc *ChannelsController) GetFeed() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		return cc.interactor(c).GetFeed()
+	return func(echoCtx echo.Context) error {
+		return cc.interactor(echoCtx).GetFeed()
 	}
 }

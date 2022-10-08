@@ -11,24 +11,24 @@ import (
 )
 
 type YoutubeAuthsPresenter struct {
-	c echo.Context
+	echoCtx echo.Context
 }
 
 var _ ports.YoutubeAuthsOutputPort = (*YoutubeAuthsPresenter)(nil)
 
-func NewYoutubeAuthsPresenter(c echo.Context) *YoutubeAuthsPresenter {
-	return &YoutubeAuthsPresenter{c}
+func NewYoutubeAuthsPresenter(echoCtx echo.Context) *YoutubeAuthsPresenter {
+	return &YoutubeAuthsPresenter{echoCtx}
 }
 
 func (p *YoutubeAuthsPresenter) OutputRedirectURL(url string) error {
-	return p.c.Redirect(http.StatusSeeOther, url)
+	return p.echoCtx.Redirect(http.StatusSeeOther, url)
 }
 
 func (p *YoutubeAuthsPresenter) Login(user *entities.User) error {
-	sess, _ := session.Get(middlewares.DefaultAuthenticatorConfig.CookieName, p.c)
+	sess, _ := session.Get(middlewares.DefaultAuthenticatorConfig.CookieName, p.echoCtx)
 	sess.Options = middlewares.DefaultAuthenticatorConfig.Session
 	sess.Values["user_id"] = user.Id
-	sess.Save(p.c.Request(), p.c.Response())
+	sess.Save(p.echoCtx.Request(), p.echoCtx.Response())
 
-	return p.c.JSON(http.StatusOK, user)
+	return p.echoCtx.JSON(http.StatusOK, user)
 }

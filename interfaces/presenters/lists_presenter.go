@@ -7,13 +7,13 @@ import (
 )
 
 type ListsPresenter struct {
-	c echo.Context
+	echoCtx echo.Context
 }
 
 var _ ports.ListsOutputPort = (*ListsPresenter)(nil)
 
-func NewListsPresenter(c echo.Context) *ListsPresenter {
-	return &ListsPresenter{c}
+func NewListsPresenter(echoCtx echo.Context) *ListsPresenter {
+	return &ListsPresenter{echoCtx}
 }
 
 func (p *ListsPresenter) OutputLists(lists []*entities.List) error {

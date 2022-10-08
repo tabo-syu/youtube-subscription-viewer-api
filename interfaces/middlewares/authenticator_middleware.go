@@ -58,10 +58,10 @@ func Authenticator(
 	config AuthenticatorConfig,
 ) AuthenticatorFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			ctx := c.Request().Context()
+		return func(echoCtx echo.Context) error {
+			ctx := echoCtx.Request().Context()
 
-			sess, _ := session.Get(config.CookieName, c)
+			sess, _ := session.Get(config.CookieName, echoCtx)
 			sess.Options = config.Session
 			userID, ok := sess.Values["user_id"]
 			if !ok {
@@ -77,10 +77,10 @@ func Authenticator(
 			userTokenSouce := newUserTokenSouce(tokenSouce, users, userID.(string))
 			client := oauth2.NewClient(ctx, oauth2.ReuseTokenSource(token, userTokenSouce))
 
-			c.Set("user", user)
-			c.Set("client", client)
+			echoCtx.Set("user", user)
+			echoCtx.Set("client", client)
 
-			return next(c)
+			return next(echoCtx)
 		}
 	}
 }
