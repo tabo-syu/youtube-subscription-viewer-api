@@ -16,7 +16,10 @@
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/go/src/youtube-channel-manager-api",
 	// Set *default* container specific settings.json values on container create.
-	"settings": {},
+	"settings": {
+		"go.lintTool": "golangci-lint",
+		"go.lintFlags": ["--fast"]
+	},
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"golang.go",

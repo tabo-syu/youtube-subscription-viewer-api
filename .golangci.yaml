@@ -1,0 +1,14 @@
+linters:
+  enable-all: true
+  disable:
+    # deprecated になっている linter を無効化
+    - exhaustivestruct
+    - deadcode
+    - maligned
+    - golint
+    - ifshort
+    - scopelint
+    - structcheck
+    - varcheck
+    - nosnakecase
+    - interfacer
