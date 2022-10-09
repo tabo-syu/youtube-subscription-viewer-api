@@ -54,7 +54,8 @@ func validateState(echoCtx echo.Context, config CheckerConfig, state string) boo
 }
 
 func setCookie(echoCtx echo.Context, config CheckerConfig) {
-	state := random.String(32)
+	var length uint8 = 32
+	state := random.String(length)
 
 	cookie := new(http.Cookie)
 	cookie.Name = config.CookieName

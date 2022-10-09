@@ -35,9 +35,12 @@ func (yc *YoutubeAuthsController) interactor(echoCtx echo.Context) *interactors.
 
 func (yc *YoutubeAuthsController) Authorize(stateKey string) echo.HandlerFunc {
 	return func(echoCtx echo.Context) error {
-		return yc.interactor(echoCtx).Authorize(
-			echoCtx.Get(stateKey).(string),
-		)
+		stateKey, ok := echoCtx.Get(stateKey).(string)
+		if !ok {
+			return echo.NewHTTPError(http.StatusBadRequest, "state is invalid key")
+		}
+
+		return yc.interactor(echoCtx).Authorize(stateKey)
 	}
 }
 

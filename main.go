@@ -10,29 +10,29 @@ import (
 func main() {
 	config, err := infrastructures.NewConfig()
 	if err != nil {
-		log.Fatalf("Cannot read client_secret.json")
+		log.Println("Cannot read client_secret.json")
 	}
 
 	sql, err := infrastructures.NewSQLHandler(&config.DB)
 	if err != nil {
-		log.Fatalf("Cannot connect DB")
+		log.Println("Cannot connect DB")
 	}
 	defer sql.Close()
 
 	if err := migration.Migrate(sql); err != nil {
-		log.Fatalf("Cannot migrate cause:\n%s", err)
+		log.Printf("Cannot migrate cause:\n%s", err)
 	}
 
 	oAuth, err := infrastructures.NewYoutubeOAuth2Handler(config.Youtube.ClientSecret)
 	if err != nil {
-		log.Fatalf("Cannot initialize OAuth handler")
+		log.Println("Cannot initialize OAuth handler")
 	}
 
 	youtube := infrastructures.NewYoutubeHandler()
 
 	server, err := infrastructures.NewServer(sql, oAuth, youtube)
 	if err != nil {
-		log.Fatalf("Cannot start the server")
+		log.Println("Cannot start the server")
 	}
 
 	server.Start("8080")

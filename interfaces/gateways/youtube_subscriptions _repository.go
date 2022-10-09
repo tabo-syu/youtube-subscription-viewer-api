@@ -32,11 +32,12 @@ func (r *YoutubeSubscrptionsRepository) GetSubscriptions(
 		channels      []*entities.Channel
 		nextPageToken string
 		loopErr       error
+		maxResult     int64 = 50
 	)
 
 	for {
 		subscriptionsCall := subscriptions.Mine(true).Order("alphabetical").
-			MaxResults(50).PageToken(nextPageToken)
+			MaxResults(maxResult).PageToken(nextPageToken)
 
 		res, err := subscriptionsCall.Do()
 		if err != nil {

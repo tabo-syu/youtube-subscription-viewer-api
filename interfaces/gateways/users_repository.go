@@ -39,7 +39,10 @@ func (r *UsersRepository) Get(userID string) (*entities.User, *oauth2.Token, err
 	var (
 		user  = entities.User{}
 		token = oauth2.Token{
-			TokenType: "bearer",
+			TokenType:    "bearer",
+			AccessToken:  "",
+			RefreshToken: "",
+			Expiry:       time.Time{},
 		}
 	)
 

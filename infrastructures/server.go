@@ -53,15 +53,15 @@ func NewServer(sql *SQLHandler, oauth2 *YoutubeOAuth2Handler, youtube *YoutubeHa
 }
 
 func (s *Server) Start(port string) {
-	e := echo.New()
-	e.Use(
+	echo := echo.New()
+	echo.Use(
 		middleware.Logger(),
 		session.Middleware(
 			sessions.NewFilesystemStore("", []byte(os.Getenv("SESSION_KEY"))),
 		),
 	)
 
-	users := e.Group("/users")
+	users := echo.Group("/users")
 	{
 		users.GET("/auth",
 			s.Controllers.Authorizations.Authorize(middlewares.DefaultCheckerConfig.StateKey),
@@ -74,7 +74,7 @@ func (s *Server) Start(port string) {
 		users.GET("/me/subscriptions", s.Controllers.Users.GetMySubscriptions(), s.Middlewares.Authenticator)
 	}
 
-	lists := e.Group("/lists")
+	lists := echo.Group("/lists")
 	{
 		lists.POST("", s.Controllers.Lists.Create())
 		lists.GET("", s.Controllers.Lists.GetAll())
@@ -89,10 +89,10 @@ func (s *Server) Start(port string) {
 		lists.GET("/:id/feed", s.Controllers.Lists.GetFeed())
 	}
 
-	channels := e.Group("/channels")
+	channels := echo.Group("/channels")
 	{
 		channels.GET("/:id/feed", s.Controllers.Channels.GetFeed())
 	}
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
+	echo.Logger.Fatal(echo.Start(fmt.Sprintf(":%s", port)))
 }

@@ -1,6 +1,8 @@
 package gateways
 
 import (
+	"log"
+
 	"github.com/tabo-syu/youtube-subscription-viewer-api/entities"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/interfaces"
 	"github.com/tabo-syu/youtube-subscription-viewer-api/usecases/ports"
@@ -25,7 +27,12 @@ func (r *ChannelsRepository) BulkSave(channels []*entities.Channel) error {
 	if err != nil {
 		return err
 	}
-	defer transaction.Rollback()
+
+	defer func() {
+		if err := transaction.Rollback(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	stmt, err := transaction.Prepare(`
 		INSERT INTO channels (id, name, thumbnail, url) VALUES ($1, $2, $3, $4)
@@ -35,7 +42,12 @@ func (r *ChannelsRepository) BulkSave(channels []*entities.Channel) error {
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
+
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for _, channel := range channels {
 		_, err := stmt.Exec(channel.Id, channel.Name, channel.Thumbnail, channel.Url)

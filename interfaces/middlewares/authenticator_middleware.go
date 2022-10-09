@@ -16,17 +16,19 @@ type AuthenticatorConfig struct {
 }
 
 var (
+	oneWeek                    = 60 * 60 * 24 * 7
 	DefaultAuthenticatorConfig = AuthenticatorConfig{
 		CookieName: "_sess",
 		Session: &sessions.Options{
+			Domain:   "localhost",
+			Secure:   false,
 			Path:     "/",
-			MaxAge:   86400 * 7,
+			MaxAge:   oneWeek,
 			HttpOnly: true,
 			SameSite: http.SameSiteLaxMode,
 		},
 	}
-	ErrUnauthorized  = echo.NewHTTPError(http.StatusUnauthorized, "user is unauthorized")
-	ErrInternalError = echo.NewHTTPError(http.StatusInternalServerError, "cannot update token")
+	ErrUnauthorized = echo.NewHTTPError(http.StatusUnauthorized, "user is unauthorized")
 )
 
 type userTokenSource struct {
@@ -64,20 +66,25 @@ func Authenticator(
 			sess, _ := session.Get(config.CookieName, echoCtx)
 			sess.Options = config.Session
 
-			userID, ok := sess.Values["user_id"]
-			if !ok {
+			rawUserID, success := sess.Values["user_id"]
+			if !success {
 				return ErrUnauthorized
 			}
 
-			user, token, err := users.Get(userID.(string))
+			userID, success := rawUserID.(string)
+			if !success {
+				return ErrUnauthorized
+			}
+
+			user, token, err := users.Get(userID)
 			if err != nil {
 				return ErrUnauthorized
 			}
 
 			// トークンの更新処理
-			tokenSouce := auth.TokenSource(ctx, token)
-			userTokenSouce := newUserTokenSouce(tokenSouce, users, userID.(string))
-			client := oauth2.NewClient(ctx, oauth2.ReuseTokenSource(token, userTokenSouce))
+			tokenSource := auth.TokenSource(ctx, token)
+			userTokenSource := newUserTokenSouce(tokenSource, users, userID)
+			client := oauth2.NewClient(ctx, oauth2.ReuseTokenSource(token, userTokenSource))
 
 			echoCtx.Set("user", user)
 			echoCtx.Set("client", client)

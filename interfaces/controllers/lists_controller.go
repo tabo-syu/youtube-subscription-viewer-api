@@ -67,13 +67,13 @@ func (lc *ListsController) AddChannel() echo.HandlerFunc {
 	}
 }
 
-func (c *ListsController) GetAllChannels() echo.HandlerFunc {
+func (lc *ListsController) GetAllChannels() echo.HandlerFunc {
 	return func(echoCtx echo.Context) error {
 		return nil
 	}
 }
 
-func (c *ListsController) GetFeed() echo.HandlerFunc {
+func (lc *ListsController) GetFeed() echo.HandlerFunc {
 	return func(echoCtx echo.Context) error {
 		return nil
 	}

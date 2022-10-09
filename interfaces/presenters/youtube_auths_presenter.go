@@ -1,6 +1,7 @@
 package presenters
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo-contrib/session"
@@ -28,7 +29,10 @@ func (p *YoutubeAuthsPresenter) Login(user *entities.User) error {
 	sess, _ := session.Get(middlewares.DefaultAuthenticatorConfig.CookieName, p.echoCtx)
 	sess.Options = middlewares.DefaultAuthenticatorConfig.Session
 	sess.Values["user_id"] = user.Id
-	sess.Save(p.echoCtx.Request(), p.echoCtx.Response())
+
+	if err := sess.Save(p.echoCtx.Request(), p.echoCtx.Response()); err != nil {
+		log.Println(err)
+	}
 
 	return p.echoCtx.JSON(http.StatusOK, user)
 }
